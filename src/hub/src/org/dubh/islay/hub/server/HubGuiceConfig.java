@@ -16,6 +16,7 @@ public class HubGuiceConfig extends GuiceServletContextListener {
   protected Injector getInjector() {
     return Guice.createInjector(
         new HubServletModule(),
-        new ObjectifyModule());
+        new ObjectifyModule(),
+        new AppEngineModule());
   }
 }

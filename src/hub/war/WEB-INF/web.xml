@@ -26,4 +26,14 @@
     <welcome-file>Hub.html</welcome-file>
   </welcome-file-list>
 
+  <!-- Enable openid authentication -->
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Everything</web-resource-name>
+      <url-pattern>.*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>*</role-name>
+    </auth-constraint>
+  </security-constraint>
 </web-app>

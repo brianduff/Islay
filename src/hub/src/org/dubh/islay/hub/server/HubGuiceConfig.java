@@ -14,6 +14,8 @@ import com.google.inject.servlet.ServletModule;
 public class HubGuiceConfig extends GuiceServletContextListener {
   @Override
   protected Injector getInjector() {
-    return Guice.createInjector(new HubServletModule());
+    return Guice.createInjector(
+        new HubServletModule(),
+        new ObjectifyModule());
   }
 }

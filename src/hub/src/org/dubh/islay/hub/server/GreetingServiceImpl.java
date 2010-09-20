@@ -1,10 +1,14 @@
 package org.dubh.islay.hub.server;
 
 import org.dubh.islay.hub.client.GreetingService;
+import org.dubh.islay.hub.model.User;
 import org.dubh.islay.hub.shared.FieldVerifier;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
 
 /**
  * The server side implementation of the RPC service.
@@ -13,6 +17,13 @@ import com.google.inject.Singleton;
 @Singleton
 public class GreetingServiceImpl extends RemoteServiceServlet implements
     GreetingService {
+  
+  private final ObjectifyFactory objectifyFactory;
+  
+  @Inject
+  GreetingServiceImpl(ObjectifyFactory objectifyFactory) {
+    this.objectifyFactory = objectifyFactory;
+  }
 
   public String greetServer(String input) throws IllegalArgumentException {
     // Verify that the input is valid.
@@ -29,6 +40,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
     // Escape data from the client to avoid cross-site script vulnerabilities.
     input = escapeHtml(input);
     userAgent = escapeHtml(userAgent);
+    
+    // for testing purposes, create a new entity in the appengine datastore
+    // for this user.
+    Objectify ofy = objectifyFactory.begin();
+    ofy.put(new User().setUserId(input));
 
     return "Hello, " + input + "!<br><br>I am running " + serverInfo
         + ".<br><br>It looks like you are using:<br>" + userAgent;

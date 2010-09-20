@@ -4,19 +4,24 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-  
-  <!-- Servlets -->
-  <servlet>
-    <servlet-name>greetServlet</servlet-name>
-    <servlet-class>org.dubh.islay.hub.server.GreetingServiceImpl</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-    <servlet-name>greetServlet</servlet-name>
-    <url-pattern>/hub/greet</url-pattern>
-  </servlet-mapping>
-  
-  <!-- Default page to serve -->
+  <!-- Sets up the Guice filter, which intercepts incoming requests and
+       dispatches them based on annotations on servlet classes. For more
+       information, see http://code.google.com/p/google-guice/wiki/ServletModule -->
+  <filter>
+    <filter-name>guiceFilter</filter-name>
+    <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>guiceFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <listener>
+    <listener-class>org.dubh.islay.hub.server.HubGuiceConfig</listener-class>
+  </listener>
+
+  <!-- Default static page to serve -->
   <welcome-file-list>
     <welcome-file>Hub.html</welcome-file>
   </welcome-file-list>

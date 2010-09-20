@@ -2,12 +2,15 @@ package org.dubh.islay.hub.server;
 
 import org.dubh.islay.hub.client.GreetingService;
 import org.dubh.islay.hub.shared.FieldVerifier;
+
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.inject.Singleton;
 
 /**
  * The server side implementation of the RPC service.
  */
 @SuppressWarnings("serial")
+@Singleton
 public class GreetingServiceImpl extends RemoteServiceServlet implements
     GreetingService {
 

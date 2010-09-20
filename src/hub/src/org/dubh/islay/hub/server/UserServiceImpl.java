@@ -54,7 +54,7 @@ public class UserServiceImpl extends RemoteServiceServlet implements UserService
 
   @Override
   public String createLoginUrl() {
-    return gaeUserService.createLoginURL("/");
+    return "/_ah/login_required";
   }
 
   @Override

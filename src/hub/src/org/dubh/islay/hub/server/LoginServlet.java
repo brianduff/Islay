@@ -43,10 +43,7 @@ public class LoginServlet extends HttpServlet {
     PrintWriter out = resp.getWriter();
 
     if (user != null) {
-      out.println("Hello <i>" + user.getNickname() + "</i>!");
-      out.println("[<a href=\""
-          + userService.createLogoutURL(req.getRequestURI())
-          + "\">sign out</a>]");
+      resp.sendRedirect("/");
     } else {
       out.println("Hello world! Sign in at: ");
       for (String providerName : openIdProviders.keySet()) {

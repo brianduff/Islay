@@ -34,6 +34,12 @@ public class UserAccount implements Serializable {
   private String emailAddress;
   
   /**
+   * Has this user completed registration? A UserAccount will be in isRegistered=false
+   * state just after they sign in using openid for the first time.
+   */
+  private boolean isRegistered;
+  
+  /**
    * The date this user joined the hub.
    */
   private Date joinDate;
@@ -83,6 +89,15 @@ public class UserAccount implements Serializable {
     return this;
   }
 
+  public boolean isRegistered() {
+    return isRegistered;
+  }
+
+  public UserAccount setRegistered(boolean isRegistered) {
+    this.isRegistered = isRegistered;
+    return this;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -91,6 +106,7 @@ public class UserAccount implements Serializable {
         + ((emailAddress == null) ? 0 : emailAddress.hashCode());
     result = prime * result
         + ((internalId == null) ? 0 : internalId.hashCode());
+    result = prime * result + (isRegistered ? 1231 : 1237);
     result = prime * result + ((joinDate == null) ? 0 : joinDate.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
     result = prime * result + ((userId == null) ? 0 : userId.hashCode());
@@ -115,6 +131,8 @@ public class UserAccount implements Serializable {
       if (other.internalId != null)
         return false;
     } else if (!internalId.equals(other.internalId))
+      return false;
+    if (isRegistered != other.isRegistered)
       return false;
     if (joinDate == null) {
       if (other.joinDate != null)

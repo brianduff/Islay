@@ -1,5 +1,6 @@
 package org.dubh.islay.hub.server;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -47,7 +48,10 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
     UserAccount user = ofy.query(UserAccount.class).filter("userId", getIdentity(gaeUser)).get();
     if (user == null) {
       // Create a new datastore user and insert it into the datastore.
-      user = new UserAccount().setUserId(getIdentity(gaeUser));
+      user = new UserAccount().setUserId(getIdentity(gaeUser)).setJoinDate(new Date());
+      if (gaeUser.getEmail() != null) {
+        user.setEmailAddress(gaeUser.getEmail());
+      }
       ofy.put(user);
     }
     return user;
@@ -84,5 +88,10 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
           new HashSet<String>()));
     }
     return copy;
+  }
+
+  @Override
+  public void save(UserAccount account) {
+    of.begin().put(account);
   }
 }

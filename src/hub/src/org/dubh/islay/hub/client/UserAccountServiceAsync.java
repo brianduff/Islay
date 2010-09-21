@@ -12,4 +12,5 @@ public interface UserAccountServiceAsync {
   void createLoginUrl(AsyncCallback<String> callback);
   void createLogoutUrl(AsyncCallback<String> callback);
   void getOpenIdProviders(AsyncCallback<List<OpenIdProvider>> callback);
+  void save(UserAccount account, AsyncCallback<Void> callback);
 }

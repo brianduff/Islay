@@ -1,0 +1,38 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:style>
+  	.centered {
+  	  text-align: center;	
+  	}
+	
+	.banner {
+	  background-image:url('image/login_background.png');
+	  background-repeat:repeat-x;
+	  height: 180px;
+	  text-shadow: 2px 2px 4px #999;
+	  padding: 10px;
+	}
+  </ui:style>
+  
+  <g:HTMLPanel>
+    <div class="{style.centered}">
+      <img src="image/logo_medium.png" />
+    </div>
+    <div class="{style.centered}" style="margin-bottom: 25px;">
+      Social sharing made easy
+    </div>
+    
+    <div class="{style.centered} {style.banner}">
+      To get started, log in with your existing account on one of these sites:
+      
+      <br />
+      <br />
+      <br />
+
+      <g:HTML ui:field="providerLinks" />
+    </div>
+    
+    
+  </g:HTMLPanel>
+</ui:UiBinder> 

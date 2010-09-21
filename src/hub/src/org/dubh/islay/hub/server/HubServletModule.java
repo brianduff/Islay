@@ -10,7 +10,6 @@ import com.google.inject.servlet.ServletModule;
 final class HubServletModule extends ServletModule {
   @Override
   protected void configureServlets() {
-    serve("/hub/user").with(UserServiceImpl.class);
-    serve("/_ah/login_required").with(LoginServlet.class);
+    serve("/hub/user").with(UserAccountServiceImpl.class);
   }
 }

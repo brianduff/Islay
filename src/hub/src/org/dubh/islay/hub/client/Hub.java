@@ -11,6 +11,6 @@ public class Hub implements EntryPoint {
    * This is the entry point method.
    */
   public void onModuleLoad() {
-    RootPanel.get("content").add(new LoginTest());
+    RootPanel.get("content").add(new Login());
   }
 }

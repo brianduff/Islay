@@ -14,6 +14,7 @@
   <!-- Allows us to use entity objects in the model package
        from GWT code. -->
   <inherits name="com.googlecode.objectify.Objectify" />
+  <inherits name="com.google.gwt.inject.Inject"/>
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.dubh.islay.hub.client.Hub'/>

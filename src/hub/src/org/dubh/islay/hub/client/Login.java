@@ -11,17 +11,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 public class Login extends Composite {
   private static LoginUiBinder uiBinder = GWT.create(LoginUiBinder.class);
-  private final UserAccountServiceAsync userService = GWT.create(UserAccountService.class);
-
   interface LoginUiBinder extends UiBinder<Widget, Login> {
   }
 
   @UiField HTML providerLinks;
   
-  public Login() {
+  @Inject
+  public Login(UserAccountServiceAsync userService) {
     initWidget(uiBinder.createAndBindUi(this));
     userService.getOpenIdProviders(new AsyncCallback<List<OpenIdProvider>>() {
       @Override

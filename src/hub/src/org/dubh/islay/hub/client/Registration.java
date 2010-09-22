@@ -13,13 +13,14 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 public class Registration extends Composite {
   private static RegistrationUiBinder uiBinder = GWT
       .create(RegistrationUiBinder.class);  
   interface RegistrationUiBinder extends UiBinder<Widget, Registration> {
   }
-  private final UserAccountServiceAsync userService = GWT.create(UserAccountService.class);
+  private final UserAccountServiceAsync userService;
   
   private UserAccount userAccount;
 
@@ -28,13 +29,16 @@ public class Registration extends Composite {
   @UiField Button submit;
   @UiField Label message;
   
-  public Registration(UserAccount userAccount) {
+  @Inject
+  public Registration(UserAccountServiceAsync userService) {
+    this.userService = userService;
     initWidget(uiBinder.createAndBindUi(this));
+  }
+  
+  public void setUserAccount(UserAccount userAccount) {
     this.userAccount = userAccount;
-    
     message.setVisible(false);
-    
-    email.setText(userAccount.getEmailAddress());
+    email.setText(userAccount.getEmailAddress());    
   }
 
   @UiHandler("submit")

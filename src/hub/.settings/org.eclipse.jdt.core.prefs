@@ -1,4 +1,4 @@
-#Sun Sep 19 18:40:59 PDT 2010
+#Wed Sep 22 23:33:20 PDT 2010
 eclipse.preferences.version=1
 org.eclipse.jdt.core.formatter.align_type_members_on_columns=false
 org.eclipse.jdt.core.formatter.alignment_for_arguments_in_allocation_expression=16
@@ -256,7 +256,7 @@ org.eclipse.jdt.core.formatter.keep_else_statement_on_same_line=false
 org.eclipse.jdt.core.formatter.keep_empty_array_initializer_on_one_line=false
 org.eclipse.jdt.core.formatter.keep_imple_if_on_one_line=false
 org.eclipse.jdt.core.formatter.keep_then_statement_on_same_line=false
-org.eclipse.jdt.core.formatter.lineSplit=80
+org.eclipse.jdt.core.formatter.lineSplit=100
 org.eclipse.jdt.core.formatter.never_indent_block_comments_on_first_column=false
 org.eclipse.jdt.core.formatter.never_indent_line_comments_on_first_column=false
 org.eclipse.jdt.core.formatter.number_of_blank_lines_at_beginning_of_method_body=0

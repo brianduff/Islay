@@ -31,8 +31,7 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
   private final ObjectifyFactory of;
   
   @Inject
-  UserAccountServiceImpl(UserService gaeUserService,
-      ObjectifyFactory of) {
+  UserAccountServiceImpl(UserService gaeUserService, ObjectifyFactory of) {
     this.gaeUserService = gaeUserService;
     this.of = of;
   }

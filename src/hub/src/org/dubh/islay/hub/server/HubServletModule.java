@@ -1,5 +1,10 @@
 package org.dubh.islay.hub.server;
 
+import static org.dubh.islay.hub.shared.Path.USER;
+
+import org.dubh.islay.hub.client.UserAccountService;
+import org.dubh.islay.hub.shared.Path;
+
 import com.google.inject.servlet.ServletModule;
 
 /**
@@ -10,6 +15,7 @@ import com.google.inject.servlet.ServletModule;
 final class HubServletModule extends ServletModule {
   @Override
   protected void configureServlets() {
-    serve("/hub/user").with(UserAccountServiceImpl.class);
+    serve(Path.of(USER)).with(UserAccountServiceImpl.class);
+    bind(UserAccountService.class).to(UserAccountServiceImpl.class);
   }
 }

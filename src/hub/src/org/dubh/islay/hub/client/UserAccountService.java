@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.dubh.islay.hub.model.UserAccount;
 import org.dubh.islay.hub.shared.OpenIdProvider;
+import org.dubh.islay.hub.shared.Path;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -13,7 +14,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  * 
  * @author brianduff
  */
-@RemoteServiceRelativePath("user")
+@RemoteServiceRelativePath(Path.USER)
 public interface UserAccountService extends RemoteService {
   
   /**

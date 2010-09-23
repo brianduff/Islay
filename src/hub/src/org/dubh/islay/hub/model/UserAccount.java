@@ -1,9 +1,16 @@
 package org.dubh.islay.hub.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.Embedded;
 import javax.persistence.Id;
+
+import org.dubh.islay.hub.shared.Network;
 
 /**
  * Information about a user of the hub.
@@ -43,6 +50,11 @@ public class UserAccount implements Serializable {
    * The date this user joined the hub.
    */
   private Date joinDate;
+  
+  /**
+   * Associations this user has to specific social networks.
+   */
+  private @Embedded Collection<NetworkAssociation> networkAssociations = new ArrayList<NetworkAssociation>();
   
   public String getName() {
     return name;
@@ -97,18 +109,43 @@ public class UserAccount implements Serializable {
     this.isRegistered = isRegistered;
     return this;
   }
+  
+  /**
+   * @return the social networks this user is connected to.
+   */
+  public Set<Network> getAssociatedNetworks() {
+    Set<Network> networks = new HashSet<Network>();
+    for (NetworkAssociation association : networkAssociations) {
+      networks.add(association.getNetwork());
+    }
+    return networks;
+  }
+  
+  /**
+   * @param network a social network this user is connected to.
+   * @return the association to that network.
+   */
+  public NetworkAssociation getNetworkAssociation(Network network) {
+    for (NetworkAssociation association : networkAssociations) {
+      if (association.getNetwork() == network) {
+        return association;
+      }
+    }
+    NetworkAssociation association = new NetworkAssociation().setNetwork(network);
+    networkAssociations.add(association);
+    return association;
+  }
 
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result
-        + ((emailAddress == null) ? 0 : emailAddress.hashCode());
-    result = prime * result
-        + ((internalId == null) ? 0 : internalId.hashCode());
+    result = prime * result + ((emailAddress == null) ? 0 : emailAddress.hashCode());
+    result = prime * result + ((internalId == null) ? 0 : internalId.hashCode());
     result = prime * result + (isRegistered ? 1231 : 1237);
     result = prime * result + ((joinDate == null) ? 0 : joinDate.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
+    result = prime * result + ((networkAssociations == null) ? 0 : networkAssociations.hashCode());
     result = prime * result + ((userId == null) ? 0 : userId.hashCode());
     return result;
   }
@@ -144,6 +181,11 @@ public class UserAccount implements Serializable {
         return false;
     } else if (!name.equals(other.name))
       return false;
+    if (networkAssociations == null) {
+      if (other.networkAssociations != null)
+        return false;
+    } else if (!networkAssociations.equals(other.networkAssociations))
+      return false;
     if (userId == null) {
       if (other.userId != null)
         return false;
@@ -151,5 +193,4 @@ public class UserAccount implements Serializable {
       return false;
     return true;
   }
-
 }

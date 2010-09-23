@@ -3,7 +3,6 @@ package org.dubh.islay.hub.client;
 import org.dubh.islay.hub.model.UserAccount;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 
@@ -15,7 +14,7 @@ import com.google.inject.Inject;
 public class MainPanel extends SimplePanel {
   @Inject
   public MainPanel(UserAccountServiceAsync userService, final Login login,
-      final Registration registration) {
+      final Registration registration, final Connect connect) {
     userService.getLoggedInUser(new AsyncCallback<UserAccount>() {
       @Override
       public void onFailure(Throwable caught) {
@@ -23,15 +22,16 @@ public class MainPanel extends SimplePanel {
       }
 
       @Override
-      public void onSuccess(UserAccount result) {
-        if (result == null) {
+      public void onSuccess(UserAccount user) {
+        if (user == null) {
           // Need to log in.
           setWidget(login);
-        } else if (!result.isRegistered()) {
-          registration.setUserAccount(result);
+        } else if (!user.isRegistered()) {
+          registration.setUserAccount(user);
           setWidget(registration);
         } else {
-          setWidget(new HTML("<b>normal page</b>"));
+          connect.setCurrentUser(user);
+          setWidget(connect);
         }
       }
     });

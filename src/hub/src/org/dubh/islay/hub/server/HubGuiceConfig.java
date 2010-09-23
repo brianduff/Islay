@@ -1,5 +1,7 @@
 package org.dubh.islay.hub.server;
 
+import org.dubh.islay.hub.server.oauth.OAuthModule;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -17,6 +19,7 @@ public class HubGuiceConfig extends GuiceServletContextListener {
     return Guice.createInjector(
         new HubServletModule(),
         new ObjectifyModule(),
-        new AppEngineModule());
+        new AppEngineModule(),
+        new OAuthModule());
   }
 }

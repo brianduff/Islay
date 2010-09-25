@@ -15,7 +15,8 @@
        from GWT code. -->
   <inherits name="com.googlecode.objectify.Objectify" />
   <inherits name="com.google.gwt.inject.Inject"/>
-
+  <inherits name='com.gwtplatform.mvp.Mvp' />
+  
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.dubh.islay.hub.client.Hub'/>
 
@@ -24,4 +25,7 @@
   <source path='shared'/>
   <source path='model'/>
 
+  <define-configuration-property name="gin.ginjector" is-multi-valued="false" />
+  <set-configuration-property name="gin.ginjector"
+       value="org.dubh.islay.hub.client.HubInjector" />
 </module>

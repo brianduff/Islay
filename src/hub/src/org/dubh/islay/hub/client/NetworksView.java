@@ -124,14 +124,13 @@ public class NetworksView extends ViewImpl implements NetworksPresenter.MyView {
 
   @Override
   public void setButtonEnabled(boolean enabled) {
-    // TODO Auto-generated method stub
-    
+    button.setEnabled(enabled);
   }
 
   @Override
   public void showMessage(String message) {
-    // TODO Auto-generated method stub
-    
+    label.setVisible(true);
+    label.setText(message);
   }
 
 }

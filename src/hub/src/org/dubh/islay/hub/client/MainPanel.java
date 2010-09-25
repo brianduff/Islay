@@ -13,8 +13,9 @@ import com.google.inject.Inject;
  */
 public class MainPanel extends SimplePanel {
   @Inject
-  public MainPanel(UserAccountServiceAsync userService, final Login login,
-      final Registration registration, final Connect connect) {
+  public MainPanel(UserAccountServiceAsync userService, final LoginView login,
+      final RegistrationView registration, final NetworksView connect) {
+    /**
     userService.getLoggedInUser(new AsyncCallback<UserAccount>() {
       @Override
       public void onFailure(Throwable caught) {
@@ -35,5 +36,6 @@ public class MainPanel extends SimplePanel {
         }
       }
     });
+    */
   }
 }

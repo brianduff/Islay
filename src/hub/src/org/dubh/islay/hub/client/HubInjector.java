@@ -2,6 +2,10 @@ package org.dubh.islay.hub.client;
 
 import com.google.gwt.inject.client.GinModules;
 import com.google.gwt.inject.client.Ginjector;
+import com.google.inject.Provider;
+import com.gwtplatform.mvp.client.EventBus;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.ProxyFailureHandler;
 
 /**
  * The main injector for the Hub server.
@@ -14,4 +18,10 @@ public interface HubInjector extends Ginjector {
    * @return the main panel.
    */
   MainPanel getMainPanel();
+  PlaceManager getPlaceManager();
+  EventBus getEventBus();
+  ProxyFailureHandler getProxyFailureHandler();
+  
+  Provider<LoginPresenter> getLoginPresenter();
+  Provider<RegistrationPresenter> getRegistrationPresenter();
 }

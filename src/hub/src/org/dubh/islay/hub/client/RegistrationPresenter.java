@@ -16,19 +16,14 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
-
-
 /**
- * 
  * @author Islandir
- *
  */
 public class RegistrationPresenter extends AuthenticatedUserPresenter<RegistrationPresenter.MyView,
     RegistrationPresenter.MyProxy> {
   public static final String TOKEN = "registration";
   
   private UserAccountServiceAsync userService;
-
   
   @Inject
   public RegistrationPresenter(EventBus eventBus, MyView view, MyProxy proxy,

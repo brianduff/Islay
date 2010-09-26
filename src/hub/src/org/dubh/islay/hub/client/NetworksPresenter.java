@@ -11,32 +11,30 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.EventBus;
-import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
-import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
-public class NetworksPresenter extends Presenter<NetworksPresenter.MyView, NetworksPresenter.MyProxy>
-    implements UserLoggedInEvent.Handler {
+/**
+ * 
+ * @author Islandir
+ */
+public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresenter.MyView, NetworksPresenter.MyProxy> {
   public static final String TOKEN = "networks";
-  
-  private final PlaceManager placeManager;
   private final NetworkAuthServiceAsync authService;
   private final UserAccountServiceAsync userService;
 
-  private UserAccount currentUser;
   private String oauthVerifier;
   private String oauthToken;
   
   @Inject
   NetworksPresenter(EventBus eventBus, MyView view, MyProxy proxy, PlaceManager placeManager,
       NetworkAuthServiceAsync authService, UserAccountServiceAsync userService) {
-    super(eventBus, view, proxy);
-    this.placeManager = placeManager;
+    super(eventBus, view, proxy, placeManager);
     this.authService = authService;
     this.userService = userService;
   }
@@ -48,14 +46,8 @@ public class NetworksPresenter extends Presenter<NetworksPresenter.MyView, Netwo
   }
   
   @Override
-  protected void onBind() {
+  protected void postBind(PlaceManager placeManager) {
     super.onBind();
-    if (currentUser == null) {
-      // Perhaps the user came straight here, bypassing the login page. Punt them
-      // back to the login page.
-      placeManager.revealDefaultPlace();
-      return;
-    }
     
     getView().button().addClickHandler(new ClickHandler() {
       @Override
@@ -76,10 +68,32 @@ public class NetworksPresenter extends Presenter<NetworksPresenter.MyView, Netwo
         });
       }
     });
-    
-    if (checkForSuccessfulAssociation()) {
-      return;
-    }
+
+  }
+  
+  private void updateUser() {
+    userService.getLoggedInUser(new AsyncCallback<UserAccount>() {
+      @Override
+      public void onFailure(Throwable caught) {
+        getView().showMessage("Failed to get current user");
+      }
+
+      @Override
+      public void onSuccess(UserAccount result) {
+        UserLoggedInEvent.fire(NetworksPresenter.this, getCurrentUser());
+        checkForSuccessfulAssociation();
+      }
+    });
+  }
+
+  @Override
+  protected void onReveal() {
+    super.onReveal();
+  }
+
+  @Override
+  protected void postReveal() {
+    checkForSuccessfulAssociation(); 
     
     if (oauthVerifier != null && oauthToken != null) {
       getView().setButtonEnabled(false);
@@ -101,23 +115,8 @@ public class NetworksPresenter extends Presenter<NetworksPresenter.MyView, Netwo
     }
   }
   
-  private void updateUser() {
-    userService.getLoggedInUser(new AsyncCallback<UserAccount>() {
-      @Override
-      public void onFailure(Throwable caught) {
-        getView().showMessage("Failed to get current user");
-      }
-
-      @Override
-      public void onSuccess(UserAccount result) {
-        UserLoggedInEvent.fire(NetworksPresenter.this, currentUser);
-        checkForSuccessfulAssociation();
-      }
-    });
-  }
-  
   private boolean checkForSuccessfulAssociation() {
-    NetworkAssociation assoc = currentUser.getNetworkAssociation(Network.BUZZ);
+    NetworkAssociation assoc = getCurrentUser().getNetworkAssociation(Network.BUZZ);
     if (assoc != null && assoc.isAccessTokenGranted()) {
       getView().setButtonEnabled(false);
       getView().showMessage("Successfully authorized to the Buzz API!");
@@ -126,23 +125,19 @@ public class NetworksPresenter extends Presenter<NetworksPresenter.MyView, Netwo
     return false;
   }
   
-  @Override
-  protected void revealInParent() {
-    RevealRootContentEvent.fire(this, this);
-  }
-  
   public interface MyView extends View {
     void setButtonEnabled(boolean enabled);
     void showMessage(String message);
     HasClickHandlers button();
   }
-  
+
+  @ProxyEvent
+  @Override
+  public void onUserLoggedIn(UserLoggedInEvent event) {
+    super.onUserLoggedIn(event);
+  }
+
   @ProxyStandard
   @NameToken(TOKEN)
   public interface MyProxy extends ProxyPlace<NetworksPresenter> {}
-
-  @Override
-  public void onUserLoggedIn(UserLoggedInEvent event) {
-    currentUser = event.getUserAccount();
-  }
 }

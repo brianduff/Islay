@@ -20,4 +20,5 @@ public interface HubInjector extends Ginjector {
   
   Provider<LoginPresenter> getLoginPresenter();
   Provider<RegistrationPresenter> getRegistrationPresenter();
+  Provider<NetworksPresenter> getNetworksPresenter();
 }

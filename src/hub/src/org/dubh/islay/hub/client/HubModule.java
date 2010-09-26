@@ -29,5 +29,6 @@ public class HubModule extends AbstractPresenterModule {
     // Presenters
     bindPresenter(LoginPresenter.class, LoginPresenter.MyView.class, LoginView.class, LoginPresenter.MyProxy.class);
     bindPresenter(RegistrationPresenter.class, RegistrationPresenter.MyView.class, RegistrationView.class, RegistrationPresenter.MyProxy.class);
+    bindPresenter(NetworksPresenter.class, NetworksPresenter.MyView.class, NetworksView.class, NetworksPresenter.MyProxy.class);
   }
 }

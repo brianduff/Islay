@@ -14,10 +14,6 @@ import com.gwtplatform.mvp.client.proxy.ProxyFailureHandler;
  */
 @GinModules(HubModule.class)
 public interface HubInjector extends Ginjector {
-  /**
-   * @return the main panel.
-   */
-  MainPanel getMainPanel();
   PlaceManager getPlaceManager();
   EventBus getEventBus();
   ProxyFailureHandler getProxyFailureHandler();

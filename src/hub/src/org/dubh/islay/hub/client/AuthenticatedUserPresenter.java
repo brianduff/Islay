@@ -6,6 +6,7 @@ import com.gwtplatform.mvp.client.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 
@@ -40,14 +41,18 @@ public abstract class AuthenticatedUserPresenter<V extends View, Proxy_ extends 
     return currentUser;
   }
   
+  protected final void revealPlace(String placeToken) {
+    placeManager.revealPlace(new PlaceRequest(placeToken));
+  }
+  
   @Override
   protected final void onBind() {
     super.onBind();
-    postBind(placeManager);
+    postBind();
   }
 
   @Override
-  protected void onReveal() {
+  protected final void onReveal() {
     super.onReveal();
 
     if (currentUser == null) {
@@ -66,7 +71,7 @@ public abstract class AuthenticatedUserPresenter<V extends View, Proxy_ extends 
   }
 
 
-  protected void postBind(PlaceManager placeManager) {
+  protected void postBind() {
     
   }
   

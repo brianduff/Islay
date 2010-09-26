@@ -14,7 +14,6 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 
@@ -39,7 +38,7 @@ public class RegistrationPresenter extends AuthenticatedUserPresenter<Registrati
   }
 
   @Override
-  protected void postBind(final PlaceManager placeManager) {
+  protected void postBind() {
     getView().submitButton().addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent event) {
@@ -68,11 +67,19 @@ public class RegistrationPresenter extends AuthenticatedUserPresenter<Registrati
 
           @Override
           public void onSuccess(Void result) {
-            placeManager.revealPlace(new PlaceRequest(NetworksPresenter.TOKEN));
+            revealPlace(NetworksPresenter.TOKEN);
           }      
         });
       }
     });
+  }
+  
+  @Override
+  protected void postReveal() {
+    if (getCurrentUser().isRegistered()) {
+      // Skip registration.
+      revealPlace(NetworksPresenter.TOKEN);
+    }
   }
 
   public interface MyView extends View {

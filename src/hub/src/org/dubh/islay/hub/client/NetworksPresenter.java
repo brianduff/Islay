@@ -16,7 +16,6 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyEvent;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
-import com.gwtplatform.mvp.client.proxy.PlaceRequest;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 
 /**
@@ -27,26 +26,20 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
   public static final String TOKEN = "networks";
   private final NetworkAuthServiceAsync authService;
   private final UserAccountServiceAsync userService;
-
-  private String oauthVerifier;
-  private String oauthToken;
+  private final BrowserEnvironment env;
   
   @Inject
   NetworksPresenter(EventBus eventBus, MyView view, MyProxy proxy, PlaceManager placeManager,
-      NetworkAuthServiceAsync authService, UserAccountServiceAsync userService) {
+      NetworkAuthServiceAsync authService, UserAccountServiceAsync userService,
+      BrowserEnvironment env) {
     super(eventBus, view, proxy, placeManager);
     this.authService = authService;
     this.userService = userService;
-  }
-
-  @Override
-  public void prepareFromRequest(PlaceRequest request) {
-    oauthVerifier = request.getParameter("oauth_verifier", null);
-    oauthToken = request.getParameter("oauth_token", null);
+    this.env = env;
   }
   
   @Override
-  protected void postBind(PlaceManager placeManager) {    
+  protected void postBind() {    
     getView().button().addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent e) {
@@ -78,20 +71,19 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
 
       @Override
       public void onSuccess(UserAccount result) {
-        checkForSuccessfulAssociation();
+        checkForSuccessfulAssociation(result);
       }
     });
   }
 
   @Override
-  protected void onReveal() {
-    super.onReveal();
-  }
-
-  @Override
   protected void postReveal() {
-    checkForSuccessfulAssociation(); 
+    if (checkForSuccessfulAssociation(getCurrentUser())) {
+      return;
+    }
     
+    String oauthVerifier = env.getUrlParameter("oauth_verifier");
+    String oauthToken = env.getUrlParameter("oauth_token");
     if (oauthVerifier != null && oauthToken != null) {
       getView().setButtonEnabled(false);
       getView().showMessage("Requesting authorization...");
@@ -105,15 +97,14 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
         public void onSuccess(Void result) {
           // Cool.. call back the user service to refresh the current user, and 
           // make sure it worked.
-          // TODO(bduff) we should use EventBus for this kind of thing. 
           updateUser();
         }
       });
     }
   }
   
-  private boolean checkForSuccessfulAssociation() {
-    NetworkAssociation assoc = getCurrentUser().getNetworkAssociation(Network.BUZZ);
+  private boolean checkForSuccessfulAssociation(UserAccount userAccount) {
+    NetworkAssociation assoc = userAccount.getNetworkAssociation(Network.BUZZ);
     if (assoc != null && assoc.isAccessTokenGranted()) {
       getView().setButtonEnabled(false);
       getView().showMessage("Successfully authorized to the Buzz API!");

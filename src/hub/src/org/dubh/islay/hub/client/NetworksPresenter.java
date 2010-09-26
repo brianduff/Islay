@@ -46,9 +46,7 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
   }
   
   @Override
-  protected void postBind(PlaceManager placeManager) {
-    super.onBind();
-    
+  protected void postBind(PlaceManager placeManager) {    
     getView().button().addClickHandler(new ClickHandler() {
       @Override
       public void onClick(ClickEvent e) {
@@ -80,7 +78,6 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
 
       @Override
       public void onSuccess(UserAccount result) {
-        UserLoggedInEvent.fire(NetworksPresenter.this, getCurrentUser());
         checkForSuccessfulAssociation();
       }
     });

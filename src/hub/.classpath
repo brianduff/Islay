@@ -14,5 +14,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/signpost-core-1.2.1.1.jar" sourcepath="third-party-src/signpost-core-1.2.1.1-src.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-codec-1.4.jar" sourcepath="third-party-src/commons-codec-1.4-sources.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwtp-0.4.jar" sourcepath="third-party-src/gwtp-0.4-src.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

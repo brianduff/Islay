@@ -1,9 +1,6 @@
 package org.dubh.islay.hub.client;
 
-import java.util.List;
-
 import org.dubh.islay.hub.model.UserAccount;
-import org.dubh.islay.hub.shared.OpenIdProvider;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -20,7 +17,6 @@ import com.gwtplatform.mvp.client.proxy.RevealRootContentEvent;
 public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresenter.MyProxy> {
   public static final String TOKEN = "login";
   
-  private final UserAccountServiceAsync userService;
   private final PlaceManager placeManager;
   
   @Inject
@@ -28,7 +24,6 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
       final UserAccountServiceAsync userService, final PlaceManager placeManager) {
     super(eventBus, view, proxy);
     
-    this.userService = userService;
     this.placeManager = placeManager;
   
     userService.getLoggedInUser(new AsyncCallback<UserAccount>() {
@@ -54,19 +49,9 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
   }
   
   private void showLoginLinks() {
-    userService.getOpenIdProviders(new AsyncCallback<List<OpenIdProvider>>() {
-      @Override
-      public void onFailure(Throwable caught) {
-        caught.printStackTrace();
-      }
-
-      @Override
-      public void onSuccess(List<OpenIdProvider> result) {
-        for (OpenIdProvider provider : result) {
-          getView().showLoginProvider(provider);
-        }
-      }
-    });
+    for (OpenIdProvider provider : OpenIdProvider.values()) {
+      getView().showLoginProvider(provider);
+    }
   }
 
   @Override

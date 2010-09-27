@@ -1,5 +1,6 @@
 package org.dubh.islay.hub;
 
+import org.dubh.islay.hub.client.LoginPresenterTest;
 import org.dubh.islay.hub.client.NetworksPresenterTest;
 import org.dubh.islay.hub.model.UserAccountTest;
 import org.junit.runner.RunWith;
@@ -12,6 +13,7 @@ import org.junit.runners.Suite;
  */
 // TODO(bduff) use a suite builder instead of listing them all out here.
 @Suite.SuiteClasses({
+    LoginPresenterTest.class,
     NetworksPresenterTest.class,
     UserAccountTest.class
 })

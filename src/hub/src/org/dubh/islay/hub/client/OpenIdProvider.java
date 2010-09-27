@@ -53,6 +53,9 @@ public enum OpenIdProvider implements Serializable {
       url += URL.encode("?" + ourAdditionalParameters);
     }
     return url;
+// In dev mode:
+//    http://127.0.0.1:8888/_ah/login?continue=%2F
+// In production mode:
 //    http://islay-test.appspot.com/_ah/login_redir?claimid=google.com/accounts/o8/id&continue=http://islay-test.appspot.com/
   }
 }

@@ -18,14 +18,23 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
   public static final String TOKEN = "login";
   
   private final PlaceManager placeManager;
+  private final UserAccountServiceAsync userService;
+  private final BrowserEnvironment env;
   
   @Inject
   public LoginPresenter(EventBus eventBus, MyView view, MyProxy proxy, 
-      final UserAccountServiceAsync userService, final PlaceManager placeManager) {
+      final UserAccountServiceAsync userService, final PlaceManager placeManager,
+      BrowserEnvironment env) {
     super(eventBus, view, proxy);
     
     this.placeManager = placeManager;
+    this.userService = userService;
+    this.env = env;
+  }
   
+  @Override
+  protected void onBind() {
+    super.onBind();
     userService.getLoggedInUser(new AsyncCallback<UserAccount>() {
       @Override
       public void onFailure(Throwable caught) {
@@ -50,17 +59,30 @@ public class LoginPresenter extends Presenter<LoginPresenter.MyView, LoginPresen
   
   private void showLoginLinks() {
     for (OpenIdProvider provider : OpenIdProvider.values()) {
-      getView().showLoginProvider(provider);
+      getView().showLoginProvider(provider, getLoginUrl(provider));
     }
   }
 
+  private String getLoginUrl(OpenIdProvider provider) {
+    // We're supposed to ask appengine to give us a login URL. However, that requires
+    // an expensive roundtrip to the server, and the URL is completely predictable.
+    // So we figure it out here on the client using some magic.
+    if (env.isRunningInDevMode()) {
+      return "http://" + env.getHost() + "/_ah/login?continue=/?gwt.codesvr="
+          + env.getUrlParameter("gwt.codesvr");
+    } else {
+      return "http://" + env.getHost() + "/_ah/login_redir?claimid=" 
+          + provider.getProviderId() + "&continue=http://" + env.getHost() + "/";
+    }
+  }
+  
   @Override
   protected void revealInParent() {
     RevealRootContentEvent.fire(this, this);
   }
   
   public interface MyView extends View {
-    void showLoginProvider(OpenIdProvider provider);
+    void showLoginProvider(OpenIdProvider provider, String loginUrl);
   }
   
   @ProxyStandard

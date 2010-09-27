@@ -1,5 +1,6 @@
 package org.dubh.islay.hub.client;
 
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 
 /**
@@ -27,5 +28,27 @@ public class BrowserEnvironment {
    */
   public void redirectToExternalUrl(String url) {
     Window.Location.assign(url);
+  }
+  
+  /**
+   * Returns true if we're running in dev mode. We determine this
+   * by looking for the gwt.codesrv url parameter (this is kind of a hack).
+   * @return
+   */
+  public boolean isRunningInDevMode() {
+    return Window.Location.getParameter("gwt.codesvr") != null;
+  }
+  
+  /**
+   * Encodes some text to make it suitable for passing as part of a URL.
+   * @param text
+   * @return
+   */
+  public String urlEncode(String text) {
+    return URL.encode(text);
+  }
+  
+  public String getHost() {
+    return Window.Location.getHost();
   }
 }

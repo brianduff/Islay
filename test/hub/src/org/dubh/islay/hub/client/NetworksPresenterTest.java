@@ -1,8 +1,9 @@
 package org.dubh.islay.hub.client;
 
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.eq;
 
 import org.dubh.islay.hub.model.UserAccount;
 import org.dubh.islay.hub.shared.Network;
@@ -12,6 +13,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.gwtplatform.mvp.client.EventBus;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
@@ -86,6 +89,34 @@ public class NetworksPresenterTest {
         .setAccessTokenSecret("access_token_secret");
     callback.getValue().onSuccess(accountWithAssociation);
     verify(view).showMessage("Successfully authorized to the Buzz API!");
+  }
+  
+  @Test
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public void bindShouldAddButtonListenerThatRequestsAToken() {    
+    HasClickHandlers button = mock(HasClickHandlers.class);
+    when(view.button()).thenReturn(button);
+    
+    ArgumentCaptor<ClickHandler> handler = ArgumentCaptor.forClass(ClickHandler.class);
+    
+    presenter.onBind();
+    
+    verify(button).addClickHandler(handler.capture());
+    
+    // Now simulate a click on the button...
+    handler.getValue().onClick(null);
+    
+    // We should call the getRequestTokenUrl API on the authService.
+    ArgumentCaptor<AsyncCallback> callback = ArgumentCaptor.forClass(AsyncCallback.class);
+    verify(authService).getRequestTokenUrl(eq(Network.BUZZ), callback.capture());
+    
+    // If the auth service fails, we display a message.
+    callback.getValue().onFailure(new RuntimeException("Fail!"));
+    verify(view).showMessage("An error occurred.");
+    
+    // Otherwise, we redirect to some buzz url.
+    callback.getValue().onSuccess("http://some.buzz.url");
+    verify(env).redirectToExternalUrl("http://some.buzz.url");
   }
   
   private void simulateLogIn() {

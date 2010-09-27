@@ -7,7 +7,6 @@ import org.dubh.islay.hub.shared.Network;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.EventBus;
@@ -52,9 +51,9 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
 
           @Override
           public void onSuccess(String result) {
-            // Redirect to the authorization page for this service. It should eventually
+            // Redirect to the authorization page for the OAuth service. It should eventually
             // call us back.
-            Window.Location.assign(result);
+            env.redirectToExternalUrl(result);
           }
         });
       }

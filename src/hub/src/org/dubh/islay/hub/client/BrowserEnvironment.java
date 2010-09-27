@@ -19,4 +19,13 @@ public class BrowserEnvironment {
   public String getUrlParameter(String parameterName) {
     return Window.Location.getParameter(parameterName);
   }
+  
+  /**
+   * Redirects the browser to an external URL.
+   * 
+   * @param url
+   */
+  public void redirectToExternalUrl(String url) {
+    Window.Location.assign(url);
+  }
 }

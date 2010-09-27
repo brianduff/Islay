@@ -1,5 +1,6 @@
 package org.dubh.islay.hub.server;
 
+import static org.dubh.islay.hub.shared.Path.ACTIVITY;
 import static org.dubh.islay.hub.shared.Path.USER;
 
 import org.dubh.islay.hub.client.UserAccountService;
@@ -16,6 +17,7 @@ final class HubServletModule extends ServletModule {
   @Override
   protected void configureServlets() {
     serve(Path.of(USER)).with(UserAccountServiceImpl.class);
+    serve(Path.of(ACTIVITY)).with(ActivityServiceImpl.class);
     bind(UserAccountService.class).to(UserAccountServiceImpl.class);
   }
 }

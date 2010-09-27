@@ -10,6 +10,7 @@ public final class Path {
   
   public static final String OAUTH = "oauth";
   public static final String USER = "user";
+  public static final String ACTIVITY = "activity";
   public static final String BASE_PATH = "/hub/";
   
   public static final String of(String servlet) {

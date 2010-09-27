@@ -76,13 +76,6 @@ public class RegistrationPresenter extends AuthenticatedUserPresenter<Registrati
       revealPlace(NetworksPresenter.TOKEN);
     }
   }
-
-  public interface MyView extends View {
-    HasText name();
-    HasText email();
-    HasClickHandlers submitButton();
-    void showMessage(String messageText);
-  }
   
   @ProxyEvent
   @Override
@@ -90,7 +83,14 @@ public class RegistrationPresenter extends AuthenticatedUserPresenter<Registrati
     super.onUserLoggedIn(event);
 
     getView().email().setText(event.getUserAccount().getEmailAddress());
-}
+  }
+  
+  public interface MyView extends View {
+    HasText name();
+    HasText email();
+    HasClickHandlers submitButton();
+    void showMessage(String messageText);
+  }
 
   @ProxyStandard
   @NameToken(TOKEN)

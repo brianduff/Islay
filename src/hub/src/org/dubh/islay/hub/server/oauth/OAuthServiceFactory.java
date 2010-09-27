@@ -16,7 +16,7 @@ import com.google.common.collect.ImmutableMap;
  * 
  * @author brianduff
  */
-class OAuthServiceFactory {
+public class OAuthServiceFactory {
   private static final Map<Network, ? extends OAuthConsumer> CONSUMERS = ImmutableMap.of(
       Network.BUZZ, new DefaultOAuthConsumer("anonymous", "anonymous")
   );
@@ -28,7 +28,7 @@ class OAuthServiceFactory {
    * @param network a network to get the OAuthService for.
    * @return an OAuthService for that network.
    */
-  OAuthProvider getProvider(Network network) {
+  public OAuthProvider getProvider(Network network) {
     return PROVIDERS.get(network);
   }
   
@@ -36,7 +36,7 @@ class OAuthServiceFactory {
    * @param network a network to get the OAuthConsumer for.
    * @return an OAuthConsumer for that network.
    */
-  OAuthConsumer getConsumer(Network network) {
+  public OAuthConsumer getConsumer(Network network) {
     return CONSUMERS.get(network);
   }
 

@@ -9,6 +9,9 @@ import org.dubh.islay.hub.shared.Network;
  * 
  * @author brianduff
  */
+// TODO(bduff) we probably don't want to pass the access tokens
+// back to the client. They're sensitive, and if intercepted by a
+// malicious user could be used to spoof user actions.
 @SuppressWarnings("serial")
 public class NetworkAssociation implements Serializable {
   private Network network;

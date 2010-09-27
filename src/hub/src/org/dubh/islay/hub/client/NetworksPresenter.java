@@ -59,7 +59,6 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
         });
       }
     });
-
   }
   
   private void updateUser() {

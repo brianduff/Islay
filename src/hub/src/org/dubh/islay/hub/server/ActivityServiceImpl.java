@@ -1,9 +1,9 @@
 package org.dubh.islay.hub.server;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Logger;
 
 import oauth.signpost.OAuthConsumer;
 
@@ -24,6 +24,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class ActivityServiceImpl extends RemoteServiceServlet implements ActivityService {
   private final OAuthServiceFactory oauthService;
+  private static final Logger log = Logger.getLogger(ActivityServiceImpl.class.getName());
   
   @Inject
   ActivityServiceImpl(OAuthServiceFactory oauthService) {
@@ -46,7 +47,7 @@ public class ActivityServiceImpl extends RemoteServiceServlet implements Activit
       
       conn.connect();
       
-      System.out.println(new String(ByteStreams.toByteArray(conn.getInputStream())));
+      log.info(new String(ByteStreams.toByteArray(conn.getInputStream())));
       
       conn.disconnect();
       

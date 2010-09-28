@@ -84,9 +84,7 @@ public class NetworksPresenterTest {
     
     // And then pretend it succeeded...
     UserAccount accountWithAssociation = new UserAccount().setEmailAddress("me@somewhere.com");
-    accountWithAssociation.getNetworkAssociation(Network.BUZZ)
-        .setAccessToken("access_token")
-        .setAccessTokenSecret("access_token_secret");
+    accountWithAssociation.getAssociatedNetworks().add(Network.BUZZ);
     callback.getValue().onSuccess(accountWithAssociation);
     verify(view).showMessage("Successfully authorized to the Buzz API!");
   }

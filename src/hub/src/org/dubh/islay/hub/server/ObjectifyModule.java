@@ -15,6 +15,7 @@ public class ObjectifyModule extends AbstractModule {
   @Override
   protected void configure() {
     ObjectifyService.register(UserAccount.class);
+    ObjectifyService.register(UserTokens.class);
     bind(ObjectifyFactory.class).toInstance(ObjectifyService.factory());
   }  
 }

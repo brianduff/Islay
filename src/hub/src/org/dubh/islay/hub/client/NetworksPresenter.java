@@ -1,6 +1,5 @@
 package org.dubh.islay.hub.client;
 
-import org.dubh.islay.hub.model.NetworkAssociation;
 import org.dubh.islay.hub.model.UserAccount;
 import org.dubh.islay.hub.shared.Network;
 
@@ -102,8 +101,7 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
   }
   
   private boolean checkForSuccessfulAssociation(UserAccount userAccount) {
-    NetworkAssociation assoc = userAccount.getNetworkAssociation(Network.BUZZ);
-    if (assoc != null && assoc.isAccessTokenGranted()) {
+    if (userAccount.getAssociatedNetworks().contains(Network.BUZZ)) {
       getView().setButtonEnabled(false);
       getView().showMessage("Successfully authorized to the Buzz API!");
       return true;

@@ -1,13 +1,10 @@
 package org.dubh.islay.hub.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Embedded;
 import javax.persistence.Id;
 
 import org.dubh.islay.hub.shared.Network;
@@ -52,9 +49,9 @@ public class UserAccount implements Serializable {
   private Date joinDate;
   
   /**
-   * Associations this user has to specific social networks.
+   * Successful associations this user has to specific social networks.
    */
-  private @Embedded Collection<NetworkAssociation> networkAssociations = new ArrayList<NetworkAssociation>();
+  private Set<Network> networks = new HashSet<Network>();
   
   public String getName() {
     return name;
@@ -114,28 +111,9 @@ public class UserAccount implements Serializable {
    * @return the social networks this user is connected to.
    */
   public Set<Network> getAssociatedNetworks() {
-    Set<Network> networks = new HashSet<Network>();
-    for (NetworkAssociation association : networkAssociations) {
-      networks.add(association.getNetwork());
-    }
     return networks;
   }
   
-  /**
-   * @param network a social network this user is connected to.
-   * @return the association to that network.
-   */
-  public NetworkAssociation getNetworkAssociation(Network network) {
-    for (NetworkAssociation association : networkAssociations) {
-      if (association.getNetwork() == network) {
-        return association;
-      }
-    }
-    NetworkAssociation association = new NetworkAssociation().setNetwork(network);
-    networkAssociations.add(association);
-    return association;
-  }
-
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -145,7 +123,7 @@ public class UserAccount implements Serializable {
     result = prime * result + (isRegistered ? 1231 : 1237);
     result = prime * result + ((joinDate == null) ? 0 : joinDate.hashCode());
     result = prime * result + ((name == null) ? 0 : name.hashCode());
-    result = prime * result + ((networkAssociations == null) ? 0 : networkAssociations.hashCode());
+    result = prime * result + ((networks == null) ? 0 : networks.hashCode());
     result = prime * result + ((userId == null) ? 0 : userId.hashCode());
     return result;
   }
@@ -181,10 +159,10 @@ public class UserAccount implements Serializable {
         return false;
     } else if (!name.equals(other.name))
       return false;
-    if (networkAssociations == null) {
-      if (other.networkAssociations != null)
+    if (networks == null) {
+      if (other.networks != null)
         return false;
-    } else if (!networkAssociations.equals(other.networkAssociations))
+    } else if (!networks.equals(other.networks))
       return false;
     if (userId == null) {
       if (other.userId != null)

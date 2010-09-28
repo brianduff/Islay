@@ -10,14 +10,17 @@ import oauth.signpost.exception.OAuthException;
 
 import org.dubh.islay.hub.client.NetworkAuthService;
 import org.dubh.islay.hub.client.UserAccountService;
-import org.dubh.islay.hub.model.NetworkAssociation;
 import org.dubh.islay.hub.model.UserAccount;
+import org.dubh.islay.hub.server.UserTokens;
+import org.dubh.islay.hub.server.NetworkTokens;
+import org.dubh.islay.hub.server.NetworkTokens.TokenAndSecret;
 import org.dubh.islay.hub.shared.Network;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.googlecode.objectify.NotFoundException;
 import com.googlecode.objectify.ObjectifyFactory;
 
 @Singleton
@@ -53,13 +56,18 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
   
   @Override
   public void getAccessToken(Network network, String requestToken, String verifyToken) throws IOException {
-    NetworkAssociation association = networkAssociation(userAccountService.getLoggedInUser(), network);
+    UserAccount user = userAccountService.getLoggedInUser();
+    UserTokens userTokens = accessTokens(userAccountService.getLoggedInUser());
+    NetworkTokens tokens = userTokens.getTokens(network);
     OAuthConsumer consumer = consumer(network);
-    consumer.setTokenWithSecret(association.getRequestToken(), association.getRequestTokenSecret());
+    consumer.setTokenWithSecret(tokens.getRequestToken().getToken(), tokens.getRequestToken().getSecret());
 
     try {
       provider(network).retrieveAccessToken(consumer, verifyToken.trim());
       saveAccessToken(network, consumer.getToken(), consumer.getTokenSecret());
+      
+      user.getAssociatedNetworks().add(network);
+      of.begin().put(user);
     } catch (OAuthException e) {
       log.log(Level.SEVERE, "Failed to get access token", e);
       throw new IOException(e.getMessage());
@@ -67,24 +75,26 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
   }
   
   private void saveRequestToken(Network network, String requestToken, String requestTokenSecret) {
-    UserAccount currentUser = userAccountService.getLoggedInUser();
-    networkAssociation(currentUser, network).setRequestToken(requestToken)
-        .setRequestTokenSecret(requestTokenSecret);
-    of.begin().put(currentUser);    
+    UserTokens tokens = accessTokens(userAccountService.getLoggedInUser());
+    tokens.getTokens(network).setRequestToken(new TokenAndSecret(requestToken, requestTokenSecret));
+    of.begin().put(tokens);    
   }
     
   private void saveAccessToken(Network network, String accessToken, String accessTokenSecret) {
-    UserAccount currentUser = userAccountService.getLoggedInUser();
-    networkAssociation(currentUser, network).setAccessToken(accessToken)
-        .setAccessTokenSecret(accessTokenSecret);
-    of.begin().put(currentUser);    
+    UserTokens tokens = accessTokens(userAccountService.getLoggedInUser());
+    tokens.getTokens(network).setAccessToken(new TokenAndSecret(accessToken, accessTokenSecret));
+    of.begin().put(tokens);    
   }
   
-  private NetworkAssociation networkAssociation(UserAccount user, Network network) {
+  private UserTokens accessTokens(UserAccount user) {
     if (user == null) {
       throw new IllegalStateException("No longer logged in");
     }
-    return user.getNetworkAssociation(network);
+    try {
+      return of.begin().get(UserTokens.class, user.getInternalId());
+    } catch (NotFoundException e) {
+      return new UserTokens().setUserId(user.getInternalId());
+    }
   }
   
   private OAuthConsumer consumer(Network network) {

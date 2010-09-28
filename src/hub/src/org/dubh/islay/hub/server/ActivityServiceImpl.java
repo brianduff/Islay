@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import oauth.signpost.OAuthConsumer;
 
 import org.dubh.islay.hub.client.ActivityService;
-import org.dubh.islay.hub.model.NetworkAssociation;
 import org.dubh.islay.hub.model.UserAccount;
 import org.dubh.islay.hub.server.oauth.OAuthServiceFactory;
 import org.dubh.islay.hub.shared.Activity;
@@ -19,23 +18,28 @@ import com.google.common.io.ByteStreams;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.googlecode.objectify.ObjectifyFactory;
 
 @SuppressWarnings("serial")
 @Singleton
 public class ActivityServiceImpl extends RemoteServiceServlet implements ActivityService {
   private final OAuthServiceFactory oauthService;
+  private final ObjectifyFactory of;
   private static final Logger log = Logger.getLogger(ActivityServiceImpl.class.getName());
   
   @Inject
-  ActivityServiceImpl(OAuthServiceFactory oauthService) {
+  ActivityServiceImpl(OAuthServiceFactory oauthService, ObjectifyFactory of) {
     this.oauthService = oauthService;
+    this.of = of;
   }
   
   @Override
   public List<Activity> getRecentActivities(UserAccount user, Network network) {
     OAuthConsumer consumer = oauthService.getConsumer(network);
-    NetworkAssociation association = user.getNetworkAssociation(network);
-    consumer.setTokenWithSecret(association.getAccessToken(), association.getAccessTokenSecret());
+    UserTokens tokens = of.begin().get(UserTokens.class, user.getInternalId());
+    
+    NetworkTokens association = tokens.getTokens(network);
+    consumer.setTokenWithSecret(association.getAccessToken().getToken(), association.getAccessToken().getSecret());
     
     try {
       URL url = new URL("https://www.googleapis.com/buzz/v1/activities/userId/@self?userId=@me");

@@ -17,6 +17,7 @@ public class NetworksView extends ViewImpl implements NetworksPresenter.MyView {
 
   @UiField Button button;
   @UiField Label label;
+  @UiField HasUserInformation header;
   
   public NetworksView() {
     widget = uiBinder.createAndBindUi(this);
@@ -41,5 +42,10 @@ public class NetworksView extends ViewImpl implements NetworksPresenter.MyView {
   @Override
   public HasClickHandlers button() {
     return button;
+  }
+
+  @Override
+  public HasUserInformation userBar() {
+    return header;
   }
 }

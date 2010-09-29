@@ -27,8 +27,8 @@ public class RegistrationPresenter extends AuthenticatedUserPresenter<Registrati
   
   @Inject
   public RegistrationPresenter(EventBus eventBus, MyView view, MyProxy proxy,
-      PlaceManager placeManager, UserAccountServiceAsync userService) {
-    super(eventBus, view, proxy, placeManager);
+      PlaceManager placeManager, UserAccountServiceAsync userService, BrowserEnvironment env) {
+    super(eventBus, view, proxy, placeManager, env);
     this.userService = userService;
   }
 
@@ -76,6 +76,11 @@ public class RegistrationPresenter extends AuthenticatedUserPresenter<Registrati
       revealPlace(NetworksPresenter.TOKEN);
     }
   }
+
+  @Override
+  protected HasUserInformation getUserBar() {
+    return getView().userBar();
+  }
   
   @ProxyEvent
   @Override
@@ -90,9 +95,11 @@ public class RegistrationPresenter extends AuthenticatedUserPresenter<Registrati
     HasText email();
     HasClickHandlers submitButton();
     void showMessage(String messageText);
+    HasUserInformation userBar();
   }
 
   @ProxyStandard
   @NameToken(TOKEN)
   public interface MyProxy extends ProxyPlace<RegistrationPresenter> {}
+
 }

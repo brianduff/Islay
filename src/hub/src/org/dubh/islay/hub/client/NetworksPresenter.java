@@ -30,7 +30,7 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
   NetworksPresenter(EventBus eventBus, MyView view, MyProxy proxy, PlaceManager placeManager,
       NetworkAuthServiceAsync authService, UserAccountServiceAsync userService,
       BrowserEnvironment env) {
-    super(eventBus, view, proxy, placeManager);
+    super(eventBus, view, proxy, placeManager, env);
     this.authService = authService;
     this.userService = userService;
     this.env = env;
@@ -109,10 +109,16 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
     return false;
   }
   
+  @Override
+  protected HasUserInformation getUserBar() {
+    return getView().userBar();
+  }
+  
   public interface MyView extends View {
     void setButtonEnabled(boolean enabled);
     void showMessage(String message);
     HasClickHandlers button();
+    HasUserInformation userBar();
   }
 
   @ProxyEvent
@@ -124,4 +130,5 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
   @ProxyStandard
   @NameToken(TOKEN)
   public interface MyProxy extends ProxyPlace<NetworksPresenter> {}
+
 }

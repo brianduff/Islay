@@ -22,8 +22,8 @@ public class OAuthModule extends ServletModule {
     // mode. For prod assumes we're running on a specific app id (evilness!)
     bindConstant().annotatedWith(Names.named("RedirectUrl")).to(
         SystemProperty.environment.value() == SystemProperty.Environment.Value.Development ?
-            "http://127.0.0.1:8888/Hub.html?gwt.codesvr=127.0.0.1:9997#" + NetworksPresenter.TOKEN :
-            "http://islay-test.appspot.com/Hub.html#" + NetworksPresenter.TOKEN
+            "http://127.0.0.1:8888/Hub.html?network=%s&gwt.codesvr=127.0.0.1:9997#" + NetworksPresenter.TOKEN :
+            "http://islay-test.appspot.com/Hub.html?network=%s#" + NetworksPresenter.TOKEN
     );
   }
 }

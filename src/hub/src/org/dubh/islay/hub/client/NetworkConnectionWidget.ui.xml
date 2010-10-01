@@ -1,0 +1,38 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:style type="org.dubh.islay.hub.client.NetworkConnectionWidget.Style">
+  
+  	.iconspace {
+  	  padding-left: 25px;
+  	}
+  
+  	.connected {
+  	  color: #008800;
+  	}
+  	
+  	.notconnected {
+  	  color: #c0c0c0;
+  	}
+  	
+  	.serviceLink {
+      background-position: left center;
+      background-repeat: no-repeat;
+  	  text-decoration: underline;
+ 	  cursor: pointer; 
+  	}
+  	
+  	.main {
+  	   padding: 5px 5px 5px 5px;  
+  	}
+  	
+  	.mockLink {
+ 
+  	}
+  	
+  </ui:style>
+  <g:HTMLPanel addStyleNames="{style.main}">
+    <g:Anchor addStyleNames="{style.serviceLink} {style.iconspace}" ui:field="serviceLink">Service Name</g:Anchor>
+    <g:Label addStyleNames="{style.connected} {style.iconspace}" ui:field="connectionDescription">Not connected</g:Label>
+  </g:HTMLPanel>
+</ui:UiBinder> 

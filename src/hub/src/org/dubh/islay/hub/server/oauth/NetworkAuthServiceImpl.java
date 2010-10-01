@@ -45,7 +45,8 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
   public String getRequestTokenUrl(Network network) throws IOException {
     try {
       OAuthConsumer consumer = consumer(network);
-      String url = provider(network).retrieveRequestToken(consumer(network), callbackUrl);
+      String callback = String.format(callbackUrl, network.toString());
+      String url = provider(network).retrieveRequestToken(consumer(network), callback);
       saveRequestToken(network, consumer.getToken(), consumer.getTokenSecret());
       return url;
     } catch (OAuthException e) {
@@ -55,7 +56,7 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
   }
   
   @Override
-  public void getAccessToken(Network network, String requestToken, String verifyToken) throws IOException {
+  public UserAccount getAccessToken(Network network, String requestToken, String verifyToken) throws IOException {
     UserAccount user = userAccountService.getLoggedInUser();
     UserTokens userTokens = accessTokens(userAccountService.getLoggedInUser());
     NetworkTokens tokens = userTokens.getTokens(network);
@@ -68,6 +69,7 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
       
       user.getAssociatedNetworks().add(network);
       of.begin().put(user);
+      return user;
     } catch (OAuthException e) {
       log.log(Level.SEVERE, "Failed to get access token", e);
       throw new IOException(e.getMessage());

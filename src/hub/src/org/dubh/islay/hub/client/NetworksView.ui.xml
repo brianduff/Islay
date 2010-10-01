@@ -6,7 +6,6 @@
   </ui:style>
   <g:HTMLPanel>
     <my:PageHeader ui:field="header" />
-    <g:Button ui:field="button">Click to connect to Buzz</g:Button> <br />
-    <g:Label ui:field="label" />
+    <g:Grid ui:field="connections" />
   </g:HTMLPanel>
 </ui:UiBinder> 

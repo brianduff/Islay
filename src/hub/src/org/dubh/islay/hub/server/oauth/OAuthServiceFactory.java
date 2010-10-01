@@ -5,11 +5,12 @@ import java.util.Map;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
-import oauth.signpost.basic.DefaultOAuthProvider;
 
 import org.dubh.islay.hub.shared.Network;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * A factory that provides instances of {@link OAuthProvider} and {@link OAuthConsumer}
@@ -23,23 +24,23 @@ public class OAuthServiceFactory {
       Network.TWITTER, new DefaultOAuthConsumer(
           "lXBAwIgsQNvGTmpGNtEQ",
           "OuIjNR2TyRpfsmn7B11jNYK28eDJlcMLYZCRC2iF0U"
-      )
+      ),
+      Network.FACEBOOK, new DefaultOAuthConsumer("", "")
   );
-  private static final Map<Network, ? extends OAuthProvider> PROVIDERS = ImmutableMap.of(
-      Network.BUZZ, new BuzzOAuthProvider(),
-      Network.TWITTER, new DefaultOAuthProvider(
-          "https://api.twitter.com/oauth/request_token",
-          "https://api.twitter.com/oauth/access_token",
-          "https://api.twitter.com/oauth/authorize"
-      )
-  );
-
+  
+  private final Map<Network, ? extends OAuthProvider> providers;
+  
+  @Inject
+  OAuthServiceFactory(@Named("OAuthProviders") Map<Network, ? extends OAuthProvider> providers) {
+    this.providers = providers;
+  }
+  
   /**
    * @param network a network to get the OAuthService for.
    * @return an OAuthService for that network.
    */
   public OAuthProvider getProvider(Network network) {
-    return PROVIDERS.get(network);
+    return providers.get(network);
   }
   
   /**

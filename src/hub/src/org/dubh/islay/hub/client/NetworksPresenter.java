@@ -67,6 +67,13 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
     
     String oauthVerifier = env.getUrlParameter("oauth_verifier");
     String oauthToken = env.getUrlParameter("oauth_token");
+    String oauth2Code = env.getUrlParameter("code");
+    
+    if (oauth2Code != null) {
+      oauthVerifier = oauth2Code;
+      oauthToken = "";
+    }
+    
     if (oauthVerifier != null && oauthToken != null) {
       getView().showStatus(network, "Requesting authorization...");
       authService.getAccessToken(network, oauthToken, oauthVerifier, new AsyncCallback<UserAccount>() {

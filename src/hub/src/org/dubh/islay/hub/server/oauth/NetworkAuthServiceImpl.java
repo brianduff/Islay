@@ -60,7 +60,6 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
     UserTokens userTokens = accessTokens(userAccountService.getLoggedInUser());
     NetworkTokens tokens = userTokens.getTokens(network);
     OAuthConsumer consumer = consumer(network);
-    System.out.println(userTokens);
     consumer.setTokenWithSecret(tokens.getRequestToken().getToken(), tokens.getRequestToken().getSecret());
 
     try {
@@ -80,8 +79,6 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
     UserTokens userTokens = accessTokens(userAccountService.getLoggedInUser());    
     userTokens.getTokens(network).getRequestToken().setToken(requestToken).setSecret(requestTokenSecret);
     of.begin().put(userTokens);
-    System.out.println("Saved tokens for " + network + ": " + requestToken);
-    System.out.println(userTokens);
   }
     
   private void saveAccessToken(Network network, String accessToken, String accessTokenSecret) {

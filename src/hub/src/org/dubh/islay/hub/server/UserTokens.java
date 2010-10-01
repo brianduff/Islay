@@ -37,10 +37,11 @@ public class UserTokens implements Serializable {
    */
   public NetworkTokens getTokens(Network network) {
     for (NetworkTokens t : tokens) {
-      if (t.getNetwork() == network) {
+      if (t.getNetwork().equals(network)) {
         return t;
       }
     }
+    System.out.println("Didn't find network " + network + " in " + this.toString());
     NetworkTokens t = new NetworkTokens().setNetwork(network);
     tokens.add(t);
     return t;
@@ -53,5 +54,10 @@ public class UserTokens implements Serializable {
   public UserTokens setUserId(Long userId) {
     this.userId = userId;
     return this;
+  }
+  
+  @Override
+  public String toString() {
+    return String.format("UserTokens[userId=%s, tokens=%s]", userId, tokens);
   }
 }

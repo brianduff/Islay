@@ -5,6 +5,7 @@ import java.util.Map;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthConsumer;
+import oauth.signpost.basic.DefaultOAuthProvider;
 
 import org.dubh.islay.hub.shared.Network;
 
@@ -18,10 +19,19 @@ import com.google.common.collect.ImmutableMap;
  */
 public class OAuthServiceFactory {
   private static final Map<Network, ? extends OAuthConsumer> CONSUMERS = ImmutableMap.of(
-      Network.BUZZ, new DefaultOAuthConsumer("anonymous", "anonymous")
+      Network.BUZZ, new DefaultOAuthConsumer("anonymous", "anonymous"),
+      Network.TWITTER, new DefaultOAuthConsumer(
+          "lXBAwIgsQNvGTmpGNtEQ",
+          "OuIjNR2TyRpfsmn7B11jNYK28eDJlcMLYZCRC2iF0U"
+      )
   );
   private static final Map<Network, ? extends OAuthProvider> PROVIDERS = ImmutableMap.of(
-      Network.BUZZ, new BuzzOAuthProvider()
+      Network.BUZZ, new BuzzOAuthProvider(),
+      Network.TWITTER, new DefaultOAuthProvider(
+          "https://api.twitter.com/oauth/request_token",
+          "https://api.twitter.com/oauth/access_token",
+          "https://api.twitter.com/oauth/authorize"
+      )
   );
 
   /**

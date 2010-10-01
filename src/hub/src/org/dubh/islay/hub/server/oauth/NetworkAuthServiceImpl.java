@@ -11,9 +11,8 @@ import oauth.signpost.exception.OAuthException;
 import org.dubh.islay.hub.client.NetworkAuthService;
 import org.dubh.islay.hub.client.UserAccountService;
 import org.dubh.islay.hub.model.UserAccount;
-import org.dubh.islay.hub.server.UserTokens;
 import org.dubh.islay.hub.server.NetworkTokens;
-import org.dubh.islay.hub.server.NetworkTokens.TokenAndSecret;
+import org.dubh.islay.hub.server.UserTokens;
 import org.dubh.islay.hub.shared.Network;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -61,6 +60,7 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
     UserTokens userTokens = accessTokens(userAccountService.getLoggedInUser());
     NetworkTokens tokens = userTokens.getTokens(network);
     OAuthConsumer consumer = consumer(network);
+    System.out.println(userTokens);
     consumer.setTokenWithSecret(tokens.getRequestToken().getToken(), tokens.getRequestToken().getSecret());
 
     try {
@@ -77,15 +77,17 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
   }
   
   private void saveRequestToken(Network network, String requestToken, String requestTokenSecret) {
-    UserTokens tokens = accessTokens(userAccountService.getLoggedInUser());
-    tokens.getTokens(network).setRequestToken(new TokenAndSecret(requestToken, requestTokenSecret));
-    of.begin().put(tokens);    
+    UserTokens userTokens = accessTokens(userAccountService.getLoggedInUser());    
+    userTokens.getTokens(network).getRequestToken().setToken(requestToken).setSecret(requestTokenSecret);
+    of.begin().put(userTokens);
+    System.out.println("Saved tokens for " + network + ": " + requestToken);
+    System.out.println(userTokens);
   }
     
   private void saveAccessToken(Network network, String accessToken, String accessTokenSecret) {
-    UserTokens tokens = accessTokens(userAccountService.getLoggedInUser());
-    tokens.getTokens(network).setAccessToken(new TokenAndSecret(accessToken, accessTokenSecret));
-    of.begin().put(tokens);    
+    UserTokens userTokens = accessTokens(userAccountService.getLoggedInUser());    
+    userTokens.getTokens(network).getAccessToken().setToken(accessToken).setSecret(accessTokenSecret);
+    of.begin().put(userTokens);    
   }
   
   private UserTokens accessTokens(UserAccount user) {

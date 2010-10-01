@@ -38,6 +38,15 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
     for (Network network : Network.values()) {
       getView().getClickHandler(network).addClickHandler(new ConnectClickHandler(network));
     }
+    
+    getView().getShowActivities().addClickHandler(
+      new ClickHandler()
+      {
+        @Override
+        public void onClick(ClickEvent event) {
+          revealPlace(RecentPostsPresenter.TOKEN);
+        }        
+      });
   }
   
   @Override
@@ -117,7 +126,8 @@ public class NetworksPresenter extends AuthenticatedUserPresenter<NetworksPresen
   public interface MyView extends View {
     void setConnected(Network network, boolean isConnected);
     void showStatus(Network network, String message);
-    HasClickHandlers getClickHandler(Network network); 
+    HasClickHandlers getClickHandler(Network network);
+    HasClickHandlers getShowActivities();
     HasUserInformation userBar();
   }
 

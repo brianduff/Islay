@@ -1,12 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
     xmlns:g="urn:import:com.google.gwt.user.client.ui"
-    xmlns:my="urn:import:org.dubh.islay.hub.client">
+    xmlns:my='urn:import:org.dubh.islay.hub.client'>
   <ui:style>
   </ui:style>
   <g:HTMLPanel>
-    <my:PageHeader ui:field="header" />
-    <b>Recent Activities in Buzz:</b>
-    <g:VerticalPanel ui:field="activitiesList" />
-  </g:HTMLPanel>
+    <my:UserBar ui:field="userbar" />
+    <img src="image/logo_small.png" alt="hubzog" />
+ </g:HTMLPanel>
 </ui:UiBinder> 

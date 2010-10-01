@@ -24,8 +24,8 @@ public class RecentPostsPresenter extends AuthenticatedUserPresenter<MyView, MyP
   
   @Inject
   public RecentPostsPresenter(EventBus eventBus, MyView view, MyProxy proxy,
-      PlaceManager placeManager, ActivityServiceAsync activityService) {
-    super(eventBus, view, proxy, placeManager);
+      PlaceManager placeManager, ActivityServiceAsync activityService, BrowserEnvironment env) {
+    super(eventBus, view, proxy, placeManager, env);
     this.activityService = activityService;
   }
   
@@ -43,6 +43,11 @@ public class RecentPostsPresenter extends AuthenticatedUserPresenter<MyView, MyP
       }      
     });
   }
+
+  @Override
+  protected HasUserInformation getUserBar() {
+    return getView().userBar();
+  }
   
   @ProxyEvent
   @Override
@@ -52,9 +57,11 @@ public class RecentPostsPresenter extends AuthenticatedUserPresenter<MyView, MyP
   
   public interface MyView extends View {
     void showActivities(List<Activity> activities);
+    HasUserInformation userBar();
   }
   
   @ProxyStandard
   @NameToken(TOKEN)
   public interface MyProxy extends ProxyPlace<RecentPostsPresenter> {}
+
 }

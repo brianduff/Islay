@@ -1,10 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  xmlns:g="urn:import:com.google.gwt.user.client.ui"
+  xmlns:my='urn:import:org.dubh.islay.hub.client'>
   <ui:style>
   </ui:style>
   <g:HTMLPanel>
-    <g:Button ui:field="button">Click to connect to Buzz</g:Button> <br />
-    <g:Label ui:field="label" />
+    <my:PageHeader ui:field="header" />
+    <g:Grid ui:field="connections" />
   </g:HTMLPanel>
 </ui:UiBinder> 

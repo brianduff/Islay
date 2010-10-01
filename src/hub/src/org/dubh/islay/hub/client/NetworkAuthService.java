@@ -2,6 +2,7 @@ package org.dubh.islay.hub.client;
 
 import java.io.IOException;
 
+import org.dubh.islay.hub.model.UserAccount;
 import org.dubh.islay.hub.shared.Network;
 import org.dubh.islay.hub.shared.Path;
 
@@ -22,5 +23,5 @@ public interface NetworkAuthService extends RemoteService {
    * Attempt to obtain an access token for the specified network, after a user
    * has authorized our request.
    */
-  void getAccessToken(Network network, String requestToken, String verifyToken) throws IOException;
+  UserAccount getAccessToken(Network network, String requestToken, String verifyToken) throws IOException;
 }

@@ -7,7 +7,6 @@ import java.util.Map;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthProvider;
 
-import org.dubh.islay.hub.client.NetworksPresenter;
 import org.dubh.islay.hub.shared.Network;
 import org.dubh.islay.hub.shared.Path;
 
@@ -42,7 +41,7 @@ public class OAuthModule extends ServletModule {
     bindConstant().annotatedWith(Names.named("RedirectUrl")).to(
         isDevMode() ?
             "http://127.0.0.1:8888/Hub.html?network=%s&gwt.codesvr=127.0.0.1:9997" :
-            "http://islay-test.appspot.com/Hub.html?network=%s#" + NetworksPresenter.TOKEN
+            "http://islay-test.appspot.com/Hub.html?network=%s"
     );
     
     // Facebook hands out client ids and secrets only for specific domains. Since we

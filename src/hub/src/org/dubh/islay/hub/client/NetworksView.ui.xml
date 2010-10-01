@@ -7,5 +7,6 @@
   <g:HTMLPanel>
     <my:PageHeader ui:field="header" />
     <g:Grid ui:field="connections" />
+    <g:Button ui:field="showActivities">Show Activities</g:Button>
   </g:HTMLPanel>
 </ui:UiBinder> 

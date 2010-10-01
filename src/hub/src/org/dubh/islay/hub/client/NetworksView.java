@@ -9,6 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -24,8 +25,10 @@ public class NetworksView extends ViewImpl implements NetworksPresenter.MyView {
 
   private final Widget widget;
 
-  @UiField Grid connections;
   @UiField HasUserInformation header;
+  @UiField Grid connections;
+  @UiField Button showActivities;
+
   
   private final Map<Network, NetworkConnectionWidget> connectionWidgets =
     new HashMap<Network, NetworkConnectionWidget>();
@@ -72,6 +75,11 @@ public class NetworksView extends ViewImpl implements NetworksPresenter.MyView {
     return connectionWidgets.get(network);
   }
 
+  @Override
+  public HasClickHandlers getShowActivities() {
+    return showActivities;
+  }
+  
   @Override
   public HasUserInformation userBar() {
     return header;

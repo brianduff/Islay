@@ -46,10 +46,10 @@ public class JsonObjectFactory {
         setField(field, instance, value);
       } else {
         // Can we find a converter for this type?
-        TypeConverter<?> converter = typeConverters.get(field.getType());
+        TypeConverter<?> converter = getConverter(field.getType());
         if (converter != null) {
-          converter.convert(value);
-          setField(field, instance, value);
+          Object convertedValue = converter.convert(this, field.getType(), value);
+          setField(field, instance, convertedValue);
         } else {
           log.warning("No suitable converter for incovertible field " + value);
         }
@@ -57,6 +57,37 @@ public class JsonObjectFactory {
     }
     
     return instance;
+  }
+  
+  /**
+   * Gets a converter that knows how to create an instance of {@code type} from
+   * a JSONObject. If none is find, walks up the interface and class hierarchy of
+   * type to look for a suitable converter.
+   * 
+   * @param type
+   * @return
+   */
+  private TypeConverter<?> getConverter(Class<?> type) {
+    // TODO(bduff) this might be slow. If so, we should cache.
+    
+    // Try this type.
+    TypeConverter<?> converter = typeConverters.get(type);
+    if (converter != null) {
+      return converter;
+    }
+    // Try the interfaces implemented by this type.
+    for (Class<?> ifType : type.getInterfaces()) {
+      converter = getConverter(ifType);
+      if (converter != null) {
+        return converter;
+      }
+    }
+    // Try the supertype.
+    Class<?> superType = type.getSuperclass();
+    if (superType == null) {
+      return null;
+    }
+    return getConverter(superType);
   }
   
   private void setField(Field field, Object instance, Object value) {
@@ -84,7 +115,7 @@ public class JsonObjectFactory {
    * An object that knows how to convert json values to an instance of type T.
    */
   private interface TypeConverter<T> {
-    T convert(Object jsonValue);
+    T convert(JsonObjectFactory factory, Class<?> clazz, Object jsonValue);
   }
   
   /**
@@ -96,7 +127,7 @@ public class JsonObjectFactory {
     private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     
     @Override
-    public Date convert(Object jsonValue) {
+    public Date convert(JsonObjectFactory factory, Class<?> clazz, Object jsonValue) {
       try {
         return format.parse((String) jsonValue);
       } catch (ParseException e) {
@@ -104,6 +135,18 @@ public class JsonObjectFactory {
         return null;
       }
     }
+  }
+
+  /**
+   * A converter that creates objects recursively through the factory for specific
+   * types.
+   */
+  private static class RecursiveConverter<T> implements TypeConverter<T> {
+    @SuppressWarnings("unchecked")
+    @Override
+    public T convert(JsonObjectFactory factory, Class<?> clazz, Object jsonValue) {
+      return (T) factory.create(clazz, (JSONObject) jsonValue);
+    } 
   }
   
   public static Builder builder() {
@@ -120,6 +163,13 @@ public class JsonObjectFactory {
     
     public Builder withIsoDateConverter() {
       typeConverters.put(Date.class, new IsoDateConverter());
+      return this;
+    }
+    
+    public <T> Builder withRecursiveConverter(Class<?>... classes) {
+      for (Class<?> clazz : classes) {
+        typeConverters.put(clazz, new RecursiveConverter<Object>());
+      }
       return this;
     }
     

@@ -44,18 +44,29 @@ public class FacebookService {
     }
   }
   
-  public ImmutableList<NamedObject> getFriends(String userId) {
+  public ImmutableList<? extends NamedObject> getFriends(String userId) {
+    return getList(User.class, userId + "/friends");
+  }
+  
+  public ImmutableList<Post> getPosts(String userId) {
+    // TODO(bduff) limit / paging. By default we get 25 at a time. Can pass limit=n to get more.
+    return getList(Post.class, userId + "/posts");
+  }
+  
+  @SuppressWarnings("unchecked")
+  private <T> ImmutableList<T> getList(Class<T> itemClazz, String relativePath) {
     try {
-      String friends = http.get(url(userId + "/friends").get());
-      List<?> data = (List<?>) parseJson(friends).get("data");      
-      ImmutableList.Builder<NamedObject> result = ImmutableList.builder();
+      String jsonString = http.get(url(relativePath).get());
+      List<?> data = (List<?>) parseJson(jsonString).get("data");      
+      ImmutableList.Builder<Object> result = ImmutableList.builder();
       for (Object item : data) {
-        result.add(json.create(User.class, (JSONObject) item));
+        result.add(json.create(itemClazz, (JSONObject) item));
       }
-      return result.build();
+      return (ImmutableList<T>) result.build();
     } catch (IOException e) {
       throw new FacebookServiceException(e);
     }
+    
   }
   
   private JSONObject parseJson(String text) {

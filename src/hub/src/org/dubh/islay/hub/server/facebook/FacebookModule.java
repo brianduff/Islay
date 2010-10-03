@@ -9,7 +9,10 @@ public class FacebookModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(JsonObjectFactory.class).toInstance(
-        JsonObjectFactory.builder().withIsoDateConverter().build());
+        JsonObjectFactory.builder()
+            .withIsoDateConverter()
+            .withRecursiveConverter(FacebookObject.class)
+            .build());
     bind(FacebookServiceFactory.class).toProvider(
         FactoryProvider.newFactory(FacebookServiceFactory.class, FacebookService.class));
   }

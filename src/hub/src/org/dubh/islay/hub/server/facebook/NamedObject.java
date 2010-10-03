@@ -6,7 +6,6 @@ package org.dubh.islay.hub.server.facebook;
  * 
  * @author brianduff
  */
-public interface NamedObject {
-  String getId();
+public interface NamedObject extends FacebookObject {
   String getName();
 }

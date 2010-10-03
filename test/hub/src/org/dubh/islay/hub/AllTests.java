@@ -3,6 +3,7 @@ package org.dubh.islay.hub;
 import org.dubh.islay.hub.client.LoginPresenterTest;
 import org.dubh.islay.hub.client.NetworksPresenterTest;
 import org.dubh.islay.hub.server.UserTokensTest;
+import org.dubh.islay.hub.server.facebook.FacebookServiceTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -15,7 +16,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     LoginPresenterTest.class,
     NetworksPresenterTest.class,
-    UserTokensTest.class
+    UserTokensTest.class,
+    FacebookServiceTest.class
 })
 @RunWith(Suite.class)
 public class AllTests {

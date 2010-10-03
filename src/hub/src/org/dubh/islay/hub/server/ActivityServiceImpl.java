@@ -82,6 +82,9 @@ public class ActivityServiceImpl extends RemoteServiceServlet implements Activit
         s.append(friend.getName()).append("\n");
       }
       log.info(s.toString());
+      
+      log.info("Recent posts:");
+      log.info(facebook.getPosts("me").toString());
     }
   }
   

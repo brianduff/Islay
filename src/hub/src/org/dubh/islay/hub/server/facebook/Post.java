@@ -7,6 +7,8 @@ import com.google.common.base.Objects;
 import static com.google.common.base.Objects.equal;
 
 public class Post implements FacebookObject {
+
+
   private String id;
   private User from;
   private User to;
@@ -199,5 +201,14 @@ public class Post implements FacebookObject {
         equal(source, other.source) &&
         equal(to, other.to) &&
         equal(updated_time, other.updated_time);
+  }
+  
+  @Override
+  public String toString() {
+    return "Post [id=" + id + ", from=" + from + ", to=" + to + ", message=" + message
+        + ", picture=" + picture + ", link=" + link + ", name=" + name + ", caption=" + caption
+        + ", description=" + description + ", source=" + source + ", icon=" + icon
+        + ", attribution=" + attribution + ", likes=" + likes + ", created_time=" + created_time
+        + ", updated_time=" + updated_time + ", comments=" + comments + "]";
   }
 }

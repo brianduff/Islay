@@ -32,7 +32,7 @@ public class UserTokensTest {
   
   @Test
   public void testAssociationProperlySet() {
-    accessTokens.getTokens(Network.BUZZ).setAccessToken(new TokenAndSecret("foo", "bar"));
+    TokenAndSecret tas = accessTokens.getTokens(Network.BUZZ).getAccessToken().setToken("foo").setSecret("bar");
     assertEquals("foo", accessTokens.getTokens(Network.BUZZ).getAccessToken().getToken());
     assertEquals("bar", accessTokens.getTokens(Network.BUZZ).getAccessToken().getSecret());
   }

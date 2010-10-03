@@ -25,14 +25,4 @@ public interface UserAccountService extends RemoteService {
    * @param account a user account to save.
    */
   void save(UserAccount account);
-  
-  /**
-   * @return a URL that can be used to log in to this application.
-   */
-  String createLoginUrl();
-  
-  /**
-   * @return a URL that can be used to log out of this application.
-   */
-  String createLogoutUrl();
 }

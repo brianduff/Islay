@@ -1,7 +1,8 @@
 package org.dubh.islay.hub.server;
 
 import java.util.Date;
-import java.util.logging.Logger;
+
+import net.sf.jsr107cache.Cache;
 
 import org.dubh.islay.hub.client.UserAccountService;
 import org.dubh.islay.hub.model.UserAccount;
@@ -17,21 +18,29 @@ import com.googlecode.objectify.ObjectifyFactory;
 @Singleton
 @SuppressWarnings("serial")
 public class UserAccountServiceImpl extends RemoteServiceServlet implements UserAccountService {
-  private static final Logger log = Logger.getLogger(UserAccountServiceImpl.class.getName());
   private final UserService gaeUserService;
   private final ObjectifyFactory of;
+  private final Cache cache;
+  
+  private static final String CURRENT_USER_KEY = "currentUser";
   
   @Inject
-  UserAccountServiceImpl(UserService gaeUserService, ObjectifyFactory of) {
+  UserAccountServiceImpl(UserService gaeUserService, ObjectifyFactory of, Cache cache) {
     this.gaeUserService = gaeUserService;
     this.of = of;
+    this.cache = cache;
   }
   
   @Override
   public UserAccount getLoggedInUser() {
     User gaeUser = gaeUserService.getCurrentUser();
     if (gaeUser == null) {
+      cache.remove(CURRENT_USER_KEY);
       return null;
+    }
+
+    if (cache.get(CURRENT_USER_KEY) != null) {
+      return (UserAccount) cache.get(CURRENT_USER_KEY);
     }
     
     Objectify ofy = of.begin();
@@ -44,8 +53,7 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
       }
       ofy.put(user);
     }
-    log.info(gaeUserService.createLogoutURL("DESTURL"));
-    
+    cache.put(CURRENT_USER_KEY, user);
     return user;
   }
   
@@ -63,17 +71,8 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
   }
 
   @Override
-  public String createLoginUrl() {
-    return "/_ah/login_required";
-  }
-
-  @Override
-  public String createLogoutUrl() {
-    return gaeUserService.createLogoutURL("/");
-  }
-
-  @Override
   public void save(UserAccount account) {
+    cache.put(CURRENT_USER_KEY, account);
     of.begin().put(account);
   }
 }

@@ -9,6 +9,8 @@ import oauth.signpost.basic.DefaultOAuthConsumer;
 import org.dubh.islay.hub.shared.Network;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 /**
  * A factory that provides instances of {@link OAuthProvider} and {@link OAuthConsumer}
@@ -18,18 +20,27 @@ import com.google.common.collect.ImmutableMap;
  */
 public class OAuthServiceFactory {
   private static final Map<Network, ? extends OAuthConsumer> CONSUMERS = ImmutableMap.of(
-      Network.BUZZ, new DefaultOAuthConsumer("anonymous", "anonymous")
+      Network.BUZZ, new DefaultOAuthConsumer("anonymous", "anonymous"),
+      Network.TWITTER, new DefaultOAuthConsumer(
+          "lXBAwIgsQNvGTmpGNtEQ",
+          "OuIjNR2TyRpfsmn7B11jNYK28eDJlcMLYZCRC2iF0U"
+      ),
+      Network.FACEBOOK, new DefaultOAuthConsumer("", "")
   );
-  private static final Map<Network, ? extends OAuthProvider> PROVIDERS = ImmutableMap.of(
-      Network.BUZZ, new BuzzOAuthProvider()
-  );
-
+  
+  private final Map<Network, ? extends OAuthProvider> providers;
+  
+  @Inject
+  OAuthServiceFactory(@Named("OAuthProviders") Map<Network, ? extends OAuthProvider> providers) {
+    this.providers = providers;
+  }
+  
   /**
    * @param network a network to get the OAuthService for.
    * @return an OAuthService for that network.
    */
   public OAuthProvider getProvider(Network network) {
-    return PROVIDERS.get(network);
+    return providers.get(network);
   }
   
   /**

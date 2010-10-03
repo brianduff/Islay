@@ -5,6 +5,7 @@
   
   	.iconspace {
   	  padding-left: 25px;
+  	  min-height: 25px;
   	}
   
   	.connected {

@@ -14,8 +14,8 @@ import org.dubh.islay.hub.shared.Network;
 @SuppressWarnings("serial")
 public class NetworkTokens implements Serializable {
   private Network network;
-  private @Embedded TokenAndSecret request;
-  private @Embedded TokenAndSecret access;
+  private @Embedded TokenAndSecret request = new TokenAndSecret();
+  private @Embedded TokenAndSecret access = new TokenAndSecret();
   
   public Network getNetwork() {
     return network;
@@ -30,18 +30,13 @@ public class NetworkTokens implements Serializable {
     return request;
   }
   
-  public NetworkTokens setRequestToken(TokenAndSecret requestToken) {
-    this.request = requestToken;
-    return this;
-  }
-  
   public TokenAndSecret getAccessToken() {
     return access;
   }
-  
-  public NetworkTokens setAccessToken(TokenAndSecret accessToken) {
-    this.access = accessToken;
-    return this;
+
+  @Override
+  public String toString() {
+    return String.format("NetworkTokens[network=%s, request=%s, access=%s]", network, request, access);
   }
   
   public static final class TokenAndSecret {
@@ -52,17 +47,27 @@ public class NetworkTokens implements Serializable {
       
     }
     
-    public TokenAndSecret(String token, String secret) {
-      this.token = token;
-      this.secret = secret;
-    }
-    
     public String getToken() {
       return token;
     }
     
     public String getSecret() {
       return secret;
+    }
+    
+    public TokenAndSecret setToken(String token) {
+      this.token = token;
+      return this;
+    }
+    
+    public TokenAndSecret setSecret(String secret) {
+      this.secret = secret;
+      return this;
+    }
+    
+    @Override
+    public String toString() {
+      return String.format("[TokenAndSecret token=%s, secret=%s]", token, secret);
     }
   }
 }

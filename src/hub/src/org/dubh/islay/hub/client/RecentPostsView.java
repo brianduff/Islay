@@ -24,6 +24,7 @@ public class RecentPostsView extends ViewImpl implements RecentPostsPresenter.My
   private final Widget widget;
   
   @UiField VerticalPanel activitiesList;
+  @UiField Label activityStream;
   @UiField PageHeader header;
 
   public RecentPostsView() {

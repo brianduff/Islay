@@ -57,6 +57,7 @@ public class RecentPostsPresenter extends AuthenticatedUserPresenter<MyView, MyP
   
   public interface MyView extends View {
     void showActivities(List<Activity> activities);
+    
     HasUserInformation userBar();
   }
   

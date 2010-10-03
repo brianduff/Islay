@@ -13,12 +13,13 @@ import org.dubh.islay.hub.model.UserAccount;
 import org.dubh.islay.hub.server.NetworkTokens.TokenAndSecret;
 import org.dubh.islay.hub.server.facebook.FacebookService;
 import org.dubh.islay.hub.server.facebook.FacebookServiceFactory;
+import org.dubh.islay.hub.server.facebook.NamedObject;
+import org.dubh.islay.hub.server.facebook.User;
 import org.dubh.islay.hub.server.oauth.OAuthServiceFactory;
 import org.dubh.islay.hub.shared.Activity;
 import org.dubh.islay.hub.shared.Network;
 
 import com.google.common.collect.Lists;
-import com.google.common.io.ByteStreams;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -73,7 +74,14 @@ public class ActivityServiceImpl extends RemoteServiceServlet implements Activit
     if (user.getAssociatedNetworks().contains(Network.FACEBOOK)) {
       TokenAndSecret accessToken = of.begin().get(UserTokens.class, user.getInternalId()).getTokens(Network.FACEBOOK).getAccessToken();
       FacebookService facebook = fb.create(accessToken.getSecret());
-      log.info(facebook.getMe().toString());
+      User me = facebook.getMe();
+      log.info("You are facebook user " + me);
+      log.info("Your friends are:");
+      StringBuilder s = new StringBuilder();
+      for (NamedObject friend : facebook.getFriends(me.getId())) {
+        s.append(friend.getName()).append("\n");
+      }
+      log.info(s.toString());
     }
   }
   

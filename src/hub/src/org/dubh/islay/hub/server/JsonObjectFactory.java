@@ -28,8 +28,7 @@ public class JsonObjectFactory {
     this.typeConverters = typeConverters;
   }
   
-  public <T> T create(Class<T> requiredClazz, String jsonObjectString) {
-    JSONObject jsonObject = (JSONObject) JSONValue.parse(jsonObjectString);
+  public <T> T create(Class<T> requiredClazz, JSONObject jsonObject) {
     T instance;
     try {
       instance = requiredClazz.newInstance();

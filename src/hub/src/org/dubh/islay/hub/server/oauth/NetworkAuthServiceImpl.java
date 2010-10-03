@@ -63,7 +63,7 @@ public class NetworkAuthServiceImpl extends RemoteServiceServlet implements Netw
     consumer.setTokenWithSecret(tokens.getRequestToken().getToken(), tokens.getRequestToken().getSecret());
 
     try {
-      provider(network).retrieveAccessToken(consumer, verifyToken.trim());
+      provider(network).retrieveAccessToken(consumer, verifyToken);
       saveAccessToken(network, consumer.getToken(), consumer.getTokenSecret());
       
       user.getAssociatedNetworks().add(network);

@@ -1,5 +1,6 @@
 package org.dubh.islay.hub.server;
 
+import org.dubh.islay.hub.server.facebook.FacebookModule;
 import org.dubh.islay.hub.server.oauth.OAuthModule;
 
 import com.google.inject.Guice;
@@ -20,6 +21,7 @@ public class HubGuiceConfig extends GuiceServletContextListener {
         new HubServletModule(),
         new ObjectifyModule(),
         new AppEngineModule(),
-        new OAuthModule());
+        new OAuthModule(),
+        new FacebookModule());
   }
 }

@@ -1,7 +1,6 @@
 package org.dubh.islay.hub.server;
 
 import java.util.Date;
-import java.util.logging.Logger;
 
 import net.sf.jsr107cache.Cache;
 
@@ -19,7 +18,6 @@ import com.googlecode.objectify.ObjectifyFactory;
 @Singleton
 @SuppressWarnings("serial")
 public class UserAccountServiceImpl extends RemoteServiceServlet implements UserAccountService {
-  private static final Logger log = Logger.getLogger(UserAccountServiceImpl.class.getName());
   private final UserService gaeUserService;
   private final ObjectifyFactory of;
   private final Cache cache;
@@ -56,8 +54,6 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
       ofy.put(user);
     }
     cache.put(CURRENT_USER_KEY, user);
-    log.info(gaeUserService.createLogoutURL("DESTURL"));
-    
     return user;
   }
   

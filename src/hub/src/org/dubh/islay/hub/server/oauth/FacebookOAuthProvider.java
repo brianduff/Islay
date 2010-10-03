@@ -1,10 +1,7 @@
 package org.dubh.islay.hub.server.oauth;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.basic.DefaultOAuthProvider;
@@ -13,12 +10,12 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 
+import org.dubh.islay.hub.server.HttpService;
+import org.dubh.islay.hub.server.UrlBuilder;
 import org.dubh.islay.hub.shared.Network;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.io.CharStreams;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
@@ -43,47 +40,45 @@ public class FacebookOAuthProvider extends DefaultOAuthProvider {
   private final String redirectUrlTemplate;
   private final String clientId;
   private final String clientSecret;
+  private final HttpService http;
   
   @Inject
   public FacebookOAuthProvider(@Named("RedirectUrl") String redirectUrlTemplate,
       @Named("FacebookClientId") String clientId, 
-      @Named("FacebookClientSecret") String clientSecret) {
+      @Named("FacebookClientSecret") String clientSecret,
+      HttpService http) {
     super("", "", "");
     this.redirectUrlTemplate = redirectUrlTemplate;
     this.clientId = clientId;
     this.clientSecret = clientSecret;
+    this.http = http;
   }
 
   @Override
   public String retrieveRequestToken(OAuthConsumer consumer, String callbackUrl)
       throws OAuthMessageSignerException, OAuthNotAuthorizedException,
       OAuthExpectationFailedException, OAuthCommunicationException {
-    return "https://graph.facebook.com/oauth/authorize"
-        + "?client_id=" + clientId
-        + "&scope=" + Joiner.on(",").join(REQUIRED_PERMISSIONS)
-        + "&redirect_uri=" + urlEncode(callbackUrl);
+    return UrlBuilder.on("https://graph.facebook.com/oauth/authorize")
+      .param("client_id", clientId)
+      .param("scope", Joiner.on(",").join(REQUIRED_PERMISSIONS))
+      .param("redirect_uri", getRedirectUrl())
+      .get().toString();
   }
 
   @Override
   public void retrieveAccessToken(OAuthConsumer consumer, String oauthVerifier)
       throws OAuthMessageSignerException, OAuthNotAuthorizedException,
       OAuthExpectationFailedException, OAuthCommunicationException {
-    String callbackUrl = String.format(redirectUrlTemplate, Network.FACEBOOK);
-    
-    HttpURLConnection conn = null;
     try {
-      URL url = new URL("https://graph.facebook.com/oauth/access_token"
-          + "?client_id=" + clientId 
-          + "&client_secret=" + clientSecret 
-          + "&redirect_uri=" + urlEncode(callbackUrl)
-          + "&type=client_cred"
-          + "&code=" + urlEncode(oauthVerifier));
+      URL url = UrlBuilder.on("https://graph.facebook.com/oauth/access_token")
+          .param("client_id", clientId) 
+          .param("client_secret", clientSecret) 
+          .param("redirect_uri", getRedirectUrl())
+          .param("code", oauthVerifier)
+          .get();
       
-      conn = (HttpURLConnection) url.openConnection();
-      conn.setReadTimeout(10000);
-      conn.setConnectTimeout(10000);
+      String response = http.get(url);
       
-      String response = CharStreams.toString(new InputStreamReader(conn.getInputStream(), Charsets.UTF_8));
       if (response.startsWith("access_token=")) {
         consumer.setTokenWithSecret("", response.substring("access_token=".length()));
       } else {
@@ -91,19 +86,27 @@ public class FacebookOAuthProvider extends DefaultOAuthProvider {
       }
     } catch (IOException e) {
       throw new OAuthCommunicationException(e);
-    } finally {
-      if (conn != null) {
-        conn.disconnect();
-      }
     }
   }
   
-  private String urlEncode(String s) {
-    try {
-      return URLEncoder.encode(s, "utf-8");
-    } catch (Exception e) {
-      throw new IllegalStateException(e);
+  private String getRedirectUrl() {
+    // There's a bug in facebook's oauth 2 implementation (found after quite
+    // a bit of trial and error) where it will blow up if the redirect_uri
+    // contains any colons or other urlencoded parts (e.g. |)
+    // Unfortunately, in dev mode, we need the colons in
+    // order for everything to work properly. 
+    // We work around this by stripping the port off the gwt codesvr parameter for now,
+    // and requiring us to
+    // manually fix the URL after facebook redirects us back after a successful
+    // authorization. This doesn't affect the site when it is deployed.
+    // I filed the bug at:
+    //    http://bugs.developers.facebook.net/show_bug.cgi?id=12817
+    
+    String callbackUrl = String.format(redirectUrlTemplate, Network.FACEBOOK);
+    int lastColon = callbackUrl.lastIndexOf(':');
+    if (lastColon != -1) {
+      return callbackUrl.substring(0, lastColon);
     }
+    return callbackUrl;
   }
-  
 }

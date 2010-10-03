@@ -1,5 +1,6 @@
 package org.dubh.islay.hub.server;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -9,6 +10,9 @@ import oauth.signpost.OAuthConsumer;
 
 import org.dubh.islay.hub.client.ActivityService;
 import org.dubh.islay.hub.model.UserAccount;
+import org.dubh.islay.hub.server.NetworkTokens.TokenAndSecret;
+import org.dubh.islay.hub.server.facebook.FacebookService;
+import org.dubh.islay.hub.server.facebook.FacebookServiceFactory;
 import org.dubh.islay.hub.server.oauth.OAuthServiceFactory;
 import org.dubh.islay.hub.shared.Activity;
 import org.dubh.islay.hub.shared.Network;
@@ -25,12 +29,16 @@ import com.googlecode.objectify.ObjectifyFactory;
 public class ActivityServiceImpl extends RemoteServiceServlet implements ActivityService {
   private final OAuthServiceFactory oauthService;
   private final ObjectifyFactory of;
+  private final FacebookServiceFactory fb;
+  private final HttpService http;
   private static final Logger log = Logger.getLogger(ActivityServiceImpl.class.getName());
   
   @Inject
-  ActivityServiceImpl(OAuthServiceFactory oauthService, ObjectifyFactory of) {
+  ActivityServiceImpl(OAuthServiceFactory oauthService, ObjectifyFactory of, FacebookServiceFactory fb, HttpService http) {
     this.oauthService = oauthService;
     this.of = of;
+    this.fb = fb;
+    this.http = http;
   }
   
   @Override
@@ -42,19 +50,8 @@ public class ActivityServiceImpl extends RemoteServiceServlet implements Activit
     consumer.setTokenWithSecret(association.getAccessToken().getToken(), association.getAccessToken().getSecret());
     
     try {
-      URL url = new URL("https://www.googleapis.com/buzz/v1/activities/userId/@self?userId=@me");
-      
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      consumer.sign(conn);
-      conn.setConnectTimeout(10000);
-      conn.setReadTimeout(10000);
-      
-      conn.connect();
-      
-      log.info(new String(ByteStreams.toByteArray(conn.getInputStream())));
-      
-      conn.disconnect();
-      
+      tryToGetBuzzStuff(consumer);
+      tryToGetFacebookStuff(user);
     } catch (Exception e) {
       throw new IllegalStateException(e);
     }
@@ -63,6 +60,34 @@ public class ActivityServiceImpl extends RemoteServiceServlet implements Activit
         new Activity().setText("Two"),
         new Activity().setText("Three")
     );
+  }
+
+  private void tryToGetBuzzStuff(OAuthConsumer consumer) throws IOException {
+    URL url = UrlBuilder.on("https://www.googleapis.com/buzz/v1/activities/userId/@self")
+        .param("userId", "@me").get();
+    
+    log.info(http.get(url, oauthSigner(consumer)));
+  }
+  
+  private void tryToGetFacebookStuff(UserAccount user) {
+    if (user.getAssociatedNetworks().contains(Network.FACEBOOK)) {
+      TokenAndSecret accessToken = of.begin().get(UserTokens.class, user.getInternalId()).getTokens(Network.FACEBOOK).getAccessToken();
+      FacebookService facebook = fb.create(accessToken.getSecret());
+      log.info(facebook.getMe().toString());
+    }
+  }
+  
+  private HttpService.Signer oauthSigner(final OAuthConsumer consumer) {
+    return new HttpService.Signer() {
+      @Override
+      public void sign(HttpURLConnection conn) throws IOException {
+        try {
+          consumer.sign(conn);
+        } catch (Exception e) {
+          throw new IOException(e);
+        }
+      }
+    };
   }
 
 }

@@ -20,6 +20,12 @@ public enum Network {
       "Twitter",
       "image/nw_twitter.png",
       "image/nw_twitter_disabled.png"
+  ),
+  LINKEDIN(
+      "Linkedin",
+      "image/nw_linkedin.png",
+      "image/nw_linkedin_disabled.png"
+      
   );
   
   private final String displayName;

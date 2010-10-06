@@ -31,8 +31,7 @@ public class OAuthModule extends ServletModule {
 
   private static final String FB_ISLAY_TEST_CLIENT_ID = "156667651020294";
   private static final String FB_ISLAY_TEST_CLIENT_SECRET = "37b2be04346a9084a46eb895549748d0";
-  
-  
+   
   @Override
   protected void configureServlets() {
     serve(Path.of(OAUTH)).with(NetworkAuthServiceImpl.class);
@@ -53,8 +52,6 @@ public class OAuthModule extends ServletModule {
     bindConstant().annotatedWith(Names.named("FacebookClientSecret")).to(
         isDevMode() ? FB_DEVMODE_CLIENT_SECRET : FB_ISLAY_TEST_CLIENT_SECRET
     );
-    
-    
   }
   
   private static boolean isDevMode() {
@@ -71,7 +68,11 @@ public class OAuthModule extends ServletModule {
           "https://api.twitter.com/oauth/access_token",
           "https://api.twitter.com/oauth/authorize"),
       Network.FACEBOOK, facebookProvider,
-      Network.BUZZ, buzzProvider
+      Network.BUZZ, buzzProvider,
+      Network.LINKEDIN, new DefaultOAuthProvider(
+          "https://api.linkedin.com/uas/oauth/requestToken",
+          "https://api.linkedin.com/uas/oauth/accessToken",
+          "https://www.linkedin.com/uas/oauth/authorize")
     );
   }  
 }

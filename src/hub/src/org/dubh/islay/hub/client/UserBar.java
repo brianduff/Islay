@@ -85,7 +85,7 @@ public class UserBar extends Composite implements HasUserInformation {
   @Override
   public void setCurrentUser(UserAccount user) {
     username.setText(user.getEmailAddress());
-    avatar.setUrl("https://secure.gravatar.com/avatar/" + user.getEmailMD5Sum() + "?s=140");
+    avatar.setUrl("https://secure.gravatar.com/avatar/" + user.getEmailMD5Sum() + "?s=140&d=identicon");
   }
   
   @Override

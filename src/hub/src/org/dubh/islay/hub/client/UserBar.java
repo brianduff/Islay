@@ -36,7 +36,6 @@ public class UserBar extends Composite implements HasUserInformation {
   public UserBar() {
     initWidget(uiBinder.createAndBindUi(this));
     settings.setVisible(false);
-    avatar.setUrl("https://secure.gravatar.com/avatar/30ce2282355bc527f090d6200f7144fb?s=140");
     avatar.setWidth("20px");
     avatar.setHeight("20px");
     settingsLink.addClickHandler(new ClickHandler() {
@@ -86,6 +85,7 @@ public class UserBar extends Composite implements HasUserInformation {
   @Override
   public void setCurrentUser(UserAccount user) {
     username.setText(user.getEmailAddress());
+    avatar.setUrl("https://secure.gravatar.com/avatar/" + user.getEmailMD5Sum() + "?s=140&d=identicon");
   }
   
   @Override

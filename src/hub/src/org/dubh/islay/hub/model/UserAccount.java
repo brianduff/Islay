@@ -53,6 +53,12 @@ public class UserAccount implements Serializable {
    */
   private Set<Network> networks = new HashSet<Network>();
   
+  /**
+   * An MD5 checksum for the user's email. We use this to link to www.gravatar.com
+   * to get an image for the user.
+   */
+  private String emailMD5Sum;
+  
   public String getName() {
     return name;
   }
@@ -114,11 +120,21 @@ public class UserAccount implements Serializable {
     return networks;
   }
   
+  public String getEmailMD5Sum() {
+    return emailMD5Sum;
+  }
+  
+  public UserAccount setEmailMD5Sum(String emailMD5Sum) {
+    this.emailMD5Sum = emailMD5Sum;
+    return this;
+  }
+  
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((emailAddress == null) ? 0 : emailAddress.hashCode());
+    result = prime * result + ((emailMD5Sum == null) ? 0 : emailMD5Sum.hashCode());
     result = prime * result + ((internalId == null) ? 0 : internalId.hashCode());
     result = prime * result + (isRegistered ? 1231 : 1237);
     result = prime * result + ((joinDate == null) ? 0 : joinDate.hashCode());
@@ -141,6 +157,11 @@ public class UserAccount implements Serializable {
       if (other.emailAddress != null)
         return false;
     } else if (!emailAddress.equals(other.emailAddress))
+      return false;
+    if (emailMD5Sum == null) {
+      if (other.emailMD5Sum != null)
+        return false;
+    } else if (!emailMD5Sum.equals(other.emailMD5Sum))
       return false;
     if (internalId == null) {
       if (other.internalId != null)

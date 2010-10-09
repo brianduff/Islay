@@ -1,5 +1,7 @@
 package org.dubh.islay.hub.server;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import net.sf.jsr107cache.Cache;
@@ -9,6 +11,7 @@ import org.dubh.islay.hub.model.UserAccount;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
+import com.google.common.base.Charsets;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -51,8 +54,16 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
       if (gaeUser.getEmail() != null) {
         user.setEmailAddress(gaeUser.getEmail());
       }
+      updateEmailMD5(user);
       ofy.put(user);
     }
+    
+    // Sanity check, since this column didn't exist before
+    if (user.getEmailMD5Sum() == null) {
+      updateEmailMD5(user);
+      ofy.put(user);
+    }
+    
     cache.put(CURRENT_USER_KEY, user);
     return user;
   }
@@ -73,6 +84,28 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
   @Override
   public void save(UserAccount account) {
     cache.put(CURRENT_USER_KEY, account);
+    updateEmailMD5(account);
     of.begin().put(account);
+  }
+  
+  private void updateEmailMD5(UserAccount account) {
+    try {
+      MessageDigest md = MessageDigest.getInstance("MD5");
+      String digest = toHexString(
+          md.digest(account.getEmailAddress().toLowerCase().getBytes(Charsets.UTF_8)));
+      account.setEmailMD5Sum(digest);
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException(e);
+    }
+  }
+  
+  private String toHexString(byte[] bytes) {
+    final String HEXES = "0123456789abcdef";
+    final StringBuilder hex = new StringBuilder(2 * bytes.length);
+    for (final byte b : bytes) {
+      hex.append(HEXES.charAt((b & 0xF0) >> 4))
+         .append(HEXES.charAt((b & 0x0F)));
+    }
+    return hex.toString();
   }
 }

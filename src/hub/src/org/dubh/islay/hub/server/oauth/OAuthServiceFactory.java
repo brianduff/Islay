@@ -25,7 +25,11 @@ public class OAuthServiceFactory {
           "lXBAwIgsQNvGTmpGNtEQ",
           "OuIjNR2TyRpfsmn7B11jNYK28eDJlcMLYZCRC2iF0U"
       ),
-      Network.FACEBOOK, new DefaultOAuthConsumer("", "")
+      Network.FACEBOOK, new DefaultOAuthConsumer("", ""),
+      Network.LINKEDIN, new DefaultOAuthConsumer(
+          "c7HD5uhAp6sflDVxxuvct8WdGdVtULS3V1RPgdR6znhcNKoURKS26ZXA-z_BPT-J",
+          "2UHm65K1rHgm8YbLkA4CtqX9ozfWS2TmNVB5StIKe4QFRtoTgf4B3roigJq_FOjr"
+      )
   );
   
   private final Map<Network, ? extends OAuthProvider> providers;

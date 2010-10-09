@@ -45,6 +45,11 @@ public class RecentPostsView extends ViewImpl implements RecentPostsPresenter.My
   }
 
   @Override
+  public void showRawActivities(String raw) {
+    activityStream.setText(raw);
+  }
+  
+  @Override
   public HasUserInformation userBar() {
     return header;
   }

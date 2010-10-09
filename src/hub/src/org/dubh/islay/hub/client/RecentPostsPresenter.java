@@ -40,6 +40,7 @@ public class RecentPostsPresenter extends AuthenticatedUserPresenter<MyView, MyP
       @Override
       public void onSuccess(List<Activity> result) {
         getView().showActivities(result);
+        getView().showRawActivities("This is where the raw string should go");
       }      
     });
   }
@@ -57,7 +58,7 @@ public class RecentPostsPresenter extends AuthenticatedUserPresenter<MyView, MyP
   
   public interface MyView extends View {
     void showActivities(List<Activity> activities);
-    
+    void showRawActivities(String raw);
     HasUserInformation userBar();
   }
   

@@ -7,9 +7,9 @@
   <g:HTMLPanel>
     <my:PageHeader ui:field="header" />
     <b>Recent Activities in Buzz:</b>
-    <g:SplitLayoutPanel>
-    	<g:west size='200'><g:VerticalPanel ui:field="activitiesList" /></g:west>
-    	<g:east size='400'><g:Label ui:field="activityStream" /></g:east>
-    </g:SplitLayoutPanel>
+    <g:HorizontalPanel>
+    	<g:VerticalPanel ui:field="activitiesList" />
+    	<g:Label ui:field="activityStream" />
+    </g:HorizontalPanel>
   </g:HTMLPanel>
 </ui:UiBinder> 

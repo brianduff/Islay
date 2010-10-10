@@ -23,5 +23,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/abdera-extensions-activitystreams-0.0.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/json_simple-1.1.jar" sourcepath="third-party-src/json_simple-1.1_src.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guice-assistedinject-2.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/abdera-i18n-1.0.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

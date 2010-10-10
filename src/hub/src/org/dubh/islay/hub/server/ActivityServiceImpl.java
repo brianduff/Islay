@@ -1,6 +1,7 @@
 package org.dubh.islay.hub.server;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -8,6 +9,11 @@ import java.util.logging.Logger;
 
 import oauth.signpost.OAuthConsumer;
 
+import org.apache.abdera.Abdera;
+import org.apache.abdera.model.Document;
+import org.apache.abdera.model.Entry;
+import org.apache.abdera.model.Feed;
+import org.apache.abdera.parser.Parser;
 import org.dubh.islay.hub.client.ActivityService;
 import org.dubh.islay.hub.model.UserAccount;
 import org.dubh.islay.hub.server.NetworkTokens.TokenAndSecret;
@@ -67,8 +73,20 @@ public class ActivityServiceImpl extends RemoteServiceServlet implements Activit
     URL url = UrlBuilder.on("https://www.googleapis.com/buzz/v1/activities/userId/@self")
         .param("userId", "@me").get();
     
-    log.info(http.get(url, oauthSigner(consumer)));
-  }
+    String activityStream = http.get(url, oauthSigner(consumer)); 
+
+    Abdera abdera = new Abdera();
+    Parser parser = abdera.getParser();
+    Document<Feed> doc = parser.parse(new StringReader(activityStream));
+    Feed feed = doc.getRoot();
+    for (Entry entry : feed.getEntries()) {
+      log.info("\t" + entry.getTitle());
+      log.info(entry.getContentType().toString());
+      log.info(entry.getContent());
+    }
+    
+/*    log.info(activityStream);
+*/  }
   
   private void tryToGetFacebookStuff(UserAccount user) {
     if (user.getAssociatedNetworks().contains(Network.FACEBOOK)) {

@@ -14,6 +14,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.common.base.Charsets;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
@@ -21,22 +22,20 @@ import com.googlecode.objectify.ObjectifyFactory;
 @Singleton
 @SuppressWarnings("serial")
 public class UserAccountServiceImpl extends RemoteServiceServlet implements UserAccountService {
-  private final UserService gaeUserService;
+  private final UserService userService;
   private final ObjectifyFactory of;
-  private final Cache cache;
-  
-  private static final String CURRENT_USER_KEY = "currentUser";
+  private final Provider<Date> dateProvider;
   
   @Inject
-  UserAccountServiceImpl(UserService gaeUserService, ObjectifyFactory of, Cache cache) {
-    this.gaeUserService = gaeUserService;
+  UserAccountServiceImpl(UserService userService, ObjectifyFactory of, Provider<Date> dateProvider) {
+    this.userService = userService;
     this.of = of;
-    this.cache = cache;
+    this.dateProvider = dateProvider;
   }
   
   @Override
   public UserAccount getLoggedInUser() {
-    User gaeUser = gaeUserService.getCurrentUser();
+    User gaeUser = userService.getCurrentUser();
     
     if (gaeUser == null) {
       return null;
@@ -46,7 +45,7 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
     UserAccount user = ofy.query(UserAccount.class).filter("userId", getIdentity(gaeUser)).get();
     if (user == null) {
       // Create a new datastore user and insert it into the datastore.
-      user = new UserAccount().setUserId(getIdentity(gaeUser)).setJoinDate(new Date());
+      user = new UserAccount().setUserId(getIdentity(gaeUser)).setJoinDate(dateProvider.get());
       if (gaeUser.getEmail() != null) {
         user.setEmailAddress(gaeUser.getEmail());
       }
@@ -78,7 +77,6 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
 
   @Override
   public void save(UserAccount account) {
-    cache.put(CURRENT_USER_KEY, account);
     updateEmailMD5(account);
     of.begin().put(account);
   }

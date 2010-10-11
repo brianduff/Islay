@@ -1,0 +1,38 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  <ui:style>
+  	.topBar {
+  		display: block;
+  		height: 21px;
+  		position: static;
+  		text-align: center;  
+  	}
+  	
+  	.topCenter {
+  		display: inline-block;
+  		text-align: center; 
+  		background: #FFF1A8; 
+  		color: #444;
+  		padding-left: 5px;
+  		padding-right: 5px;
+  		padding-bottom: 3px;
+  		border-radius: 15px;
+  		-moz-border-radius-bottomleft: 5px;
+  		-moz-border-radius-bottomright: 5px;
+  		border-bottom-left-radius: 5px;
+  		border-bottom-right-radius: 5px;
+  		border-width: 4px;
+  		border-style: solid;
+  		border-color: #FFF1A8;
+  		-moz-box-shadow: 2px 2px 2px #ccc;
+		-webkit-box-shadow: 2px 2px 2px #ccc;
+		box-shadow: 2px 2px 2px #ccc;
+  	}
+  </ui:style>
+  <g:HTMLPanel>
+    <div class="{style.topBar}">
+      <g:InlineLabel ui:field="statusMessage" styleName="{style.topCenter}" />
+    </div>
+  </g:HTMLPanel>
+</ui:UiBinder> 

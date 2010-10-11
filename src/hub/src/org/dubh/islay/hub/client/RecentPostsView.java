@@ -25,10 +25,10 @@ public class RecentPostsView extends ViewImpl implements RecentPostsPresenter.My
 
   private final Widget widget;
   
+  @UiField StatusMessage statusMessage;
   @UiField VerticalPanel activitiesList;
   @UiField Label activityStream;
   @UiField SimplePanel settings;
-  @UiField Label status;
 
   public RecentPostsView() {
     widget = uiBinder.createAndBindUi(this);
@@ -63,7 +63,7 @@ public class RecentPostsView extends ViewImpl implements RecentPostsPresenter.My
   
   @Override
   public void setStatus(String status) {
-    this.status.setText(status);
+    statusMessage.showMessage(status);
   }
 
 }

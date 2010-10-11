@@ -5,6 +5,7 @@
   <ui:style>
   </ui:style>
   <g:HTMLPanel>
+    <my:StatusMessage ui:field="statusMessage" />
     <p>
     Tell us a bit more about yourself, then we'll move right on and get to the good stuff...
     </p>
@@ -23,8 +24,5 @@
         <td><g:Button ui:field="submit">Done</g:Button></td>
       </tr>
     </table>
-    
-    <g:Label ui:field="message" />
-    
   </g:HTMLPanel>
 </ui:UiBinder> 

@@ -5,9 +5,9 @@
   <ui:style>
   </ui:style>
   <g:HTMLPanel>
+    <my:StatusMessage ui:field="statusMessage" />
     <g:SimplePanel ui:field="settings" />
     <img src="image/logo_small.png" alt="Hubzog" /><br />
-    <g:Label ui:field="status" />
     <g:HorizontalPanel>
     	<g:VerticalPanel ui:field="activitiesList" />
     	<g:Label ui:field="activityStream" />

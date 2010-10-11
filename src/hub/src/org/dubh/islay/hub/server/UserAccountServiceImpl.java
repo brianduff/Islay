@@ -38,6 +38,10 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
   public UserAccount getLoggedInUser() {
     User gaeUser = gaeUserService.getCurrentUser();
     
+    if (gaeUser == null) {
+      return null;
+    }
+    
     Objectify ofy = of.begin();
     UserAccount user = ofy.query(UserAccount.class).filter("userId", getIdentity(gaeUser)).get();
     if (user == null) {
@@ -56,7 +60,6 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
       ofy.put(user);
     }
     
-    System.out.println("Got user " + user);
     return user;
   }
   

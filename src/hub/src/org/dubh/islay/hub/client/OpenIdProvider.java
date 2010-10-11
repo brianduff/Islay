@@ -19,6 +19,16 @@ public enum OpenIdProvider implements Serializable {
       "image/openid_facebook.png",
       "Facebook",
       "www.facebook.com"
+  ),
+  YAHOO(
+      "image/openid_yahoo.png",
+      "Yahoo",
+      "yahoo.com"
+  ),
+  TWITTER(
+      "image/openid_twitter.png",
+      "Twitter",
+      "www.twitter.com"
   );
   
   private final String imageUrl;

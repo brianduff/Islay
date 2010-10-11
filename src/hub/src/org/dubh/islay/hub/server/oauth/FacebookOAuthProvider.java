@@ -90,23 +90,6 @@ public class FacebookOAuthProvider extends DefaultOAuthProvider {
   }
   
   private String getRedirectUrl() {
-    // There's a bug in facebook's oauth 2 implementation (found after quite
-    // a bit of trial and error) where it will blow up if the redirect_uri
-    // contains any colons or other urlencoded parts (e.g. |)
-    // Unfortunately, in dev mode, we need the colons in
-    // order for everything to work properly. 
-    // We work around this by stripping the port off the gwt codesvr parameter for now,
-    // and requiring us to
-    // manually fix the URL after facebook redirects us back after a successful
-    // authorization. This doesn't affect the site when it is deployed.
-    // I filed the bug at:
-    //    http://bugs.developers.facebook.net/show_bug.cgi?id=12817
-    
-    String callbackUrl = String.format(redirectUrlTemplate, Network.FACEBOOK);
-    int lastColon = callbackUrl.lastIndexOf(':');
-    if (lastColon != -1) {
-      return callbackUrl.substring(0, lastColon);
-    }
-    return callbackUrl;
+    return String.format(redirectUrlTemplate, Network.FACEBOOK);
   }
 }

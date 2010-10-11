@@ -1,4 +1,4 @@
-package org.dubh.islay.hub.client;
+package org.dubh.islay.hub.client.service;
 
 import java.io.IOException;
 

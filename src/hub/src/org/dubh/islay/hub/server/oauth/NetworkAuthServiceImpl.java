@@ -8,8 +8,8 @@ import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.exception.OAuthException;
 
-import org.dubh.islay.hub.client.NetworkAuthService;
-import org.dubh.islay.hub.client.UserAccountService;
+import org.dubh.islay.hub.client.service.NetworkAuthService;
+import org.dubh.islay.hub.client.service.UserAccountService;
 import org.dubh.islay.hub.model.UserAccount;
 import org.dubh.islay.hub.server.NetworkTokens;
 import org.dubh.islay.hub.server.UserTokens;

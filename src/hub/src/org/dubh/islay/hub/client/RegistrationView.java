@@ -21,7 +21,6 @@ public class RegistrationView extends ViewImpl implements RegistrationPresenter.
   @UiField TextBox email;
   @UiField Button submit;
   @UiField Label message;
-  @UiField HasUserInformation header;
 
   public RegistrationView() {
     widget = uiBinder.createAndBindUi(this);
@@ -54,10 +53,5 @@ public class RegistrationView extends ViewImpl implements RegistrationPresenter.
     if (messageText != null) {
       message.setText(messageText);
     }
-  }
-
-  @Override
-  public HasUserInformation userBar() {
-    return header;
   }
 }

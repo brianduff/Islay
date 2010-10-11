@@ -80,9 +80,9 @@ public class ActivityServiceImpl extends RemoteServiceServlet implements Activit
     Document<Feed> doc = parser.parse(new StringReader(activityStream));
     Feed feed = doc.getRoot();
     for (Entry entry : feed.getEntries()) {
-      log.info("\t" + entry.getTitle());
-      log.info(entry.getContentType().toString());
-      log.info(entry.getContent());
+//      log.info("\t" + entry.getTitle());
+//      log.info(entry.getContentType().toString());
+//      log.info(entry.getContent());
     }
     
 /*    log.info(activityStream);
@@ -93,16 +93,16 @@ public class ActivityServiceImpl extends RemoteServiceServlet implements Activit
       TokenAndSecret accessToken = of.begin().get(UserTokens.class, user.getInternalId()).getTokens(Network.FACEBOOK).getAccessToken();
       FacebookService facebook = fb.create(accessToken.getSecret());
       User me = facebook.getMe();
-      log.info("You are facebook user " + me);
-      log.info("Your friends are:");
+//      log.info("You are facebook user " + me);
+//      log.info("Your friends are:");
       StringBuilder s = new StringBuilder();
       for (NamedObject friend : facebook.getFriends(me.getId())) {
         s.append(friend.getName()).append("\n");
       }
-      log.info(s.toString());
+//      log.info(s.toString());
       
-      log.info("Recent posts:");
-      log.info(facebook.getPosts("me").toString());
+//      log.info("Recent posts:");
+//      log.info(facebook.getPosts("me").toString());
     }
   }
   

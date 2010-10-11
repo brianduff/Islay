@@ -3,6 +3,7 @@ package org.dubh.islay.hub.client;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.dubh.islay.hub.client.service.UserAccountServiceAsync;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;

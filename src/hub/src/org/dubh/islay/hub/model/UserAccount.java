@@ -192,4 +192,11 @@ public class UserAccount implements Serializable {
       return false;
     return true;
   }
+
+  @Override
+  public String toString() {
+    return "UserAccount [internalId=" + internalId + ", userId=" + userId + ", name=" + name
+        + ", emailAddress=" + emailAddress + ", isRegistered=" + isRegistered + ", joinDate="
+        + joinDate + ", networks=" + networks + ", emailMD5Sum=" + emailMD5Sum + "]";
+  }
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthProvider;
 
+import org.dubh.islay.hub.client.service.NetworkAuthService;
 import org.dubh.islay.hub.shared.Network;
 import org.dubh.islay.hub.shared.Path;
 
@@ -34,13 +35,14 @@ public class OAuthModule extends ServletModule {
    
   @Override
   protected void configureServlets() {
+    bind(NetworkAuthService.class).to(NetworkAuthServiceImpl.class);
     serve(Path.of(OAUTH)).with(NetworkAuthServiceImpl.class);
     // Feverish hackery. Assumes for Development that we're running in GWT hosted
     // mode. For prod assumes we're running on a specific app id (evilness!)
     bindConstant().annotatedWith(Names.named("RedirectUrl")).to(
         isDevMode() ?
-            "http://127.0.0.1:8888/Hub.html?network=%s&gwt.codesvr=127.0.0.1:9997" :
-            "http://islay-test.appspot.com/Hub.html?network=%s"
+            "http://127.0.0.1:8888/hub/oauth_cb?network=%s&dev=1" :
+            "http://islay-test.appspot.com/hub/oauth_cb?network=%s"
     );
     
     // Facebook hands out client ids and secrets only for specific domains. Since we

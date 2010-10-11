@@ -24,21 +24,17 @@ public abstract class AuthenticatedUserPresenter<V extends View, Proxy_ extends 
   
   private UserAccount currentUser;
   private final PlaceManager placeManager;
-  private final BrowserEnvironment env;
 
   protected AuthenticatedUserPresenter(EventBus eventBus, V view, Proxy_ proxy,
-      PlaceManager placeManager, BrowserEnvironment env) {
+      PlaceManager placeManager) {
     super(eventBus, view, proxy);
     this.placeManager = placeManager;
-    this.env = env;
   }
 
 
   @Override
   public void onUserLoggedIn(UserLoggedInEvent event) {
     currentUser = event.getUserAccount();
-    getUserBar().setCurrentUser(currentUser);
-    getUserBar().setLogOutUrl(getLogOutUrl());
   }
 
   protected final UserAccount getCurrentUser() {
@@ -82,18 +78,5 @@ public abstract class AuthenticatedUserPresenter<V extends View, Proxy_ extends 
   protected void postReveal() {
     
   }
-  
-  protected abstract HasUserInformation getUserBar();
-  
-  private String getLogOutUrl() {
-    // We're supposed to ask appengine to give us a logout URL. However, that requires
-    // an expensive roundtrip to the server, and the URL is completely predictable.
-    // So we figure it out here on the client using some magic.
-    if (env.isRunningInDevMode()) {
-      return "http://" + env.getHost() + "/_ah/logout?continue=/?gwt.codesvr="
-          + env.getUrlParameter("gwt.codesvr");
-    } else {
-      return "http://" + env.getHost() + "/_ah/logout_redir?continue=http://" + env.getHost() + "/";
-    }
-  }
+
 }

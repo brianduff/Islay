@@ -1,8 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+  xmlns:g="urn:import:com.google.gwt.user.client.ui">
   <ui:style>
-  	.linkbar {
+    .linkbar {
   	  position: absolute;
   	  top: 0;
   	  right: 0;
@@ -33,11 +33,7 @@
   	  padding-left: 10px;
   	  margin-left: 10px;
   	}
-  	
-  	.settingsPanel {
-      overflow: hidden;  
-  	}
-  	
+  
   </ui:style>
   <g:HTMLPanel>
     <g:HorizontalPanel ui:field="linkbar" styleName="{style.linkbar}">
@@ -48,13 +44,16 @@
           <g:Anchor styleName="{style.leftGap} {style.separator}" ui:field="settingsLink">Settings</g:Anchor>
           <g:Anchor styleName="{style.leftGap} {style.separator}" ui:field="logOutLink">Log out</g:Anchor>
         </g:HorizontalPanel>
-        <g:VerticalPanel ui:field="settings" styleName="{style.settingsPanel}">
-          <g:Label>Settings go here!</g:Label>
-          <g:Label>Settings go here!</g:Label>
-          <g:Label>Settings go here!</g:Label>
-          <g:Button>I'm a button</g:Button>
-        </g:VerticalPanel>
+        <g:HTMLPanel ui:field="settings">
+          <table width="100%">
+            <tr><td colspan="2"><g:Grid ui:field="connections" /></td></tr>
+            <tr><td>Name:</td><td><g:TextBox /></td></tr>
+            <tr><td>Email:</td><td><g:TextBox /></td></tr>
+          </table>
+        </g:HTMLPanel>
       </g:VerticalPanel>
     </g:HorizontalPanel>
+
+
   </g:HTMLPanel>
-</ui:UiBinder>
+</ui:UiBinder> 

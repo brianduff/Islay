@@ -1,5 +1,6 @@
 package org.dubh.islay.hub.client;
 
+import org.dubh.islay.hub.client.service.UserAccountServiceAsync;
 import org.dubh.islay.hub.model.UserAccount;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;

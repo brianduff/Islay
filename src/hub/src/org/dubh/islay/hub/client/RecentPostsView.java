@@ -8,6 +8,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -18,6 +19,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
  * @author brianduff
  */
 public class RecentPostsView extends ViewImpl implements RecentPostsPresenter.MyView {
+
   interface Binder extends UiBinder<Widget, RecentPostsView> {}
   private static Binder uiBinder = GWT.create(Binder.class);
 
@@ -25,7 +27,8 @@ public class RecentPostsView extends ViewImpl implements RecentPostsPresenter.My
   
   @UiField VerticalPanel activitiesList;
   @UiField Label activityStream;
-  @UiField PageHeader header;
+  @UiField SimplePanel settings;
+  @UiField Label status;
 
   public RecentPostsView() {
     widget = uiBinder.createAndBindUi(this);
@@ -50,7 +53,17 @@ public class RecentPostsView extends ViewImpl implements RecentPostsPresenter.My
   }
   
   @Override
-  public HasUserInformation userBar() {
-    return header;
+  public void setInSlot(Object slot, Widget content) {
+    if (slot == RecentPostsPresenter.TYPE_RevealSettingsBar) {
+      settings.add(content);
+    } else {
+      super.setInSlot(slot, content);
+    }
   }
+  
+  @Override
+  public void setStatus(String status) {
+    this.status.setText(status);
+  }
+
 }

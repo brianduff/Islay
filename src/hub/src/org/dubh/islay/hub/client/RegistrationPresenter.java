@@ -1,5 +1,6 @@
 package org.dubh.islay.hub.client;
 
+import org.dubh.islay.hub.client.service.UserAccountServiceAsync;
 import org.dubh.islay.hub.model.UserAccount;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,7 +30,7 @@ public class RegistrationPresenter
   @Inject
   public RegistrationPresenter(EventBus eventBus, MyView view, MyProxy proxy,
       PlaceManager placeManager, UserAccountServiceAsync userService, BrowserEnvironment env) {
-    super(eventBus, view, proxy, placeManager, env);
+    super(eventBus, view, proxy, placeManager);
     this.userService = userService;
   }
 
@@ -63,7 +64,7 @@ public class RegistrationPresenter
 
           @Override
           public void onSuccess(Void result) {
-            revealPlace(NetworksPresenter.TOKEN);
+            revealPlace(RecentPostsPresenter.TOKEN);
           }      
         });
       }
@@ -74,13 +75,8 @@ public class RegistrationPresenter
   protected void postReveal() {
     if (getCurrentUser().isRegistered()) {
       // Skip registration.
-      revealPlace(NetworksPresenter.TOKEN);
+      revealPlace(RecentPostsPresenter.TOKEN);
     }
-  }
-
-  @Override
-  protected HasUserInformation getUserBar() {
-    return getView().userBar();
   }
   
   @ProxyEvent
@@ -96,7 +92,6 @@ public class RegistrationPresenter
     HasText email();
     HasClickHandlers submitButton();
     void showMessage(String messageText);
-    HasUserInformation userBar();
   }
 
   @ProxyStandard

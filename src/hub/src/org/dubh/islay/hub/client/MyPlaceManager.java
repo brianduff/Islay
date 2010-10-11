@@ -13,6 +13,13 @@ import com.gwtplatform.mvp.client.proxy.TokenFormatter;
  * @author bduff
  */
 public class MyPlaceManager extends PlaceManagerImpl {
+  @Override
+  public void revealErrorPlace(String invalidHistoryToken) {
+    // TODO Auto-generated method stub
+    System.out.println(invalidHistoryToken);
+    super.revealErrorPlace(invalidHistoryToken);
+  }
+
   @Inject
   MyPlaceManager(EventBus eventBus, TokenFormatter tokenFormatter) {
     super(eventBus, tokenFormatter);

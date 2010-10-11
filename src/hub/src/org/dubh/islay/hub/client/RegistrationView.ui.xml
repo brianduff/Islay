@@ -5,7 +5,6 @@
   <ui:style>
   </ui:style>
   <g:HTMLPanel>
-    <my:PageHeader ui:field="header" />
     <p>
     Tell us a bit more about yourself, then we'll move right on and get to the good stuff...
     </p>

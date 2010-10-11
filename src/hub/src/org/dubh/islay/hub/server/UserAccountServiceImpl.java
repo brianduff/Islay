@@ -6,7 +6,7 @@ import java.util.Date;
 
 import net.sf.jsr107cache.Cache;
 
-import org.dubh.islay.hub.client.UserAccountService;
+import org.dubh.islay.hub.client.service.UserAccountService;
 import org.dubh.islay.hub.model.UserAccount;
 
 import com.google.appengine.api.users.User;
@@ -37,14 +37,6 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
   @Override
   public UserAccount getLoggedInUser() {
     User gaeUser = gaeUserService.getCurrentUser();
-    if (gaeUser == null) {
-      cache.remove(CURRENT_USER_KEY);
-      return null;
-    }
-
-    if (cache.get(CURRENT_USER_KEY) != null) {
-      return (UserAccount) cache.get(CURRENT_USER_KEY);
-    }
     
     Objectify ofy = of.begin();
     UserAccount user = ofy.query(UserAccount.class).filter("userId", getIdentity(gaeUser)).get();
@@ -64,7 +56,7 @@ public class UserAccountServiceImpl extends RemoteServiceServlet implements User
       ofy.put(user);
     }
     
-    cache.put(CURRENT_USER_KEY, user);
+    System.out.println("Got user " + user);
     return user;
   }
   
